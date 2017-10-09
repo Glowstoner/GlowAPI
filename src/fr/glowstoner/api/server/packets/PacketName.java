@@ -11,10 +11,9 @@ public class PacketName extends GlowPacket implements Serializable{
 	private static final long serialVersionUID = 3403427205589374397L;
 
 	private String name;
-	private PacketSource source;
 	
 	public PacketName(PacketSource source) {
-		this.source = source;
+		super(source);
 	}
 
 	public String getName() {
@@ -23,10 +22,6 @@ public class PacketName extends GlowPacket implements Serializable{
 
 	public void setName(String name) {
 		this.name = name;
-	}
-	
-	public PacketSource getSource() {
-		return this.source;
 	}
 
 	@Override

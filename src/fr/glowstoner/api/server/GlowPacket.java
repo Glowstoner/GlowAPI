@@ -12,8 +12,11 @@ public abstract class GlowPacket implements Serializable{
 	
 	private static List<IGlowPacketListener> listeners = new ArrayList<>();
 	
-	public GlowPacket() {
+	private PacketSource source;
+	
+	public GlowPacket(PacketSource source) {
 		GlowPacket.instance = this;
+		this.source = source;
 	}
 	
 	public void addPacketListener(IGlowPacketListener packetlistener) {
@@ -38,5 +41,9 @@ public abstract class GlowPacket implements Serializable{
 	
 	public PacketType getType() {
 		return state();
+	}
+	
+	public PacketSource getSource() {
+		return this.source;
 	}
 }

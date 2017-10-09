@@ -10,19 +10,15 @@ public class PacketLogin extends GlowPacket implements Serializable{
 	
 	private static final long serialVersionUID = 4616054627794646635L;
 	
-	private String pass;
-	private PacketSource source;
-	
 	public PacketLogin(PacketSource source) {
-		this.source = source;
+		super(source);
 	}
+	
+	private String pass;
+	
 
 	public String getPass() {
 		return pass;
-	}
-	
-	public PacketSource getSource() {
-		return this.source;
 	}
 
 	public void setPass(String pass) {

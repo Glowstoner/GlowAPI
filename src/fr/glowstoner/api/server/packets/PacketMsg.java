@@ -11,10 +11,9 @@ public class PacketMsg extends GlowPacket implements Serializable{
 	private static final long serialVersionUID = -7679587219427702316L;
 	
 	private String msg;
-	private PacketSource source;
 	
 	public PacketMsg(PacketSource source) {
-		this.source = source;
+		super(source);
 	}
 	
 	public void writeMsg(String msg) {
@@ -23,10 +22,6 @@ public class PacketMsg extends GlowPacket implements Serializable{
 
 	public String getMsg() {
 		return msg;
-	}
-	
-	public PacketSource getSource() {
-		return this.source;
 	}
 
 	@Override

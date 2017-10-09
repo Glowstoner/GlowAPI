@@ -43,8 +43,6 @@ public abstract class GlowPacket implements Serializable{
 			Method method = URLClassLoader.class.getDeclaredMethod("addURL", new Class[]{URL.class});
 		    method.setAccessible(true);
 		    method.invoke(ClassLoader.getSystemClassLoader(), new Object[]{mod.getFileModule().toURI().toURL()});
-		    
-		    System.out.println("Fait pour "+mod.getFileModule().getName());
 		}
 	}
 

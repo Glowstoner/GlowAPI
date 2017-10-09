@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import fr.glowstoner.api.GlowAPI;
@@ -179,6 +180,20 @@ public class GlowServer implements Runnable {
 				} catch (Exception e) {
 					e.printStackTrace();
 					active = false;
+					
+					Iterator<GlowClientConnection> conn = GlowServer.connections.iterator();
+					
+					GlowClientConnection gconnect = null;
+					
+					while(conn.hasNext()) {
+						GlowClientConnection gcc = conn.next();
+						
+						if(gcc.getClient().equals(this)) {
+							gconnect = gcc;
+						}
+					}
+					
+					GlowServer.connections.remove(gconnect);
 				}
 			}
 			

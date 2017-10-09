@@ -1,6 +1,7 @@
 package fr.glowstoner.api;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 
 import fr.glowstoner.api.boot.GlowBoot;
 import fr.glowstoner.api.boot.IGlowAPIMethods;
@@ -96,7 +97,14 @@ public abstract class GlowAPI implements IGlowAPIMethods{
 		console = bootload.getConsole();
 		bootload.globalStart(true);
 		
-		boot = bootload.getBootLoader();	
+		boot = bootload.getBootLoader();
+		
+		try {
+			GlowAPI.packet.registerAllPackets();
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException | MalformedURLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	//load Command + Packets
@@ -112,5 +120,12 @@ public abstract class GlowAPI implements IGlowAPIMethods{
 		boot = bootload;
 		
 		bootload.globalStart(false);
+		
+		try {
+			GlowAPI.packet.registerAllPackets();
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException | MalformedURLException e) {
+			e.printStackTrace();
+		}
 	}
 }

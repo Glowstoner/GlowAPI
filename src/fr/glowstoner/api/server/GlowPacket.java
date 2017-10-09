@@ -1,8 +1,15 @@
 package fr.glowstoner.api.server;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
+
+import fr.glowstoner.api.files.GlowModule;
 
 public abstract class GlowPacket implements Serializable{
 
@@ -26,6 +33,18 @@ public abstract class GlowPacket implements Serializable{
 	public void callEvent(GlowPacket packet) {
 		for(IGlowPacketListener listener : listeners) {
 			listener.onPacketReceive(packet);
+		}
+	}
+	
+	public void registerAllPackets() throws NoSuchMethodException, SecurityException,
+	IllegalAccessException, IllegalArgumentException, InvocationTargetException, MalformedURLException {
+		
+		for(GlowModule mod : GlowModule.getAllModulesInstance()) {
+			Method method = URLClassLoader.class.getDeclaredMethod("addURL", new Class[]{URL.class});
+		    method.setAccessible(true);
+		    method.invoke(ClassLoader.getSystemClassLoader(), new Object[]{mod.getFileModule().toURI().toURL()});
+		    
+		    System.out.println("Fait pour "+mod.getFileModule().getName());
 		}
 	}
 

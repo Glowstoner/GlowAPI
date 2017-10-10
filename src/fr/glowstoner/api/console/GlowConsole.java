@@ -22,6 +22,9 @@ import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
 import fr.glowstoner.api.GlowAPI;
@@ -243,47 +246,83 @@ public class GlowConsole {
 	public void log(String msg, Level lvl) {
 		if (GlowAPI.getInstance() == null) {
 			if (lvl.equals(Level.INFO)) {
-				print("[BOOTSTRAP] [INFO] " + msg);
+				print("[BOOTSTRAP] [INFO] " + msg, Color.WHITE);
 			} else if (lvl.equals(Level.SEVERE)) {
-				print("[BOOTSTRAP] [ERREUR] " + msg);
+				print("[BOOTSTRAP] [ERREUR] " + msg, Color.RED);
 			} else if (lvl.equals(Level.WARNING)) {
-				print("[BOOTSTRAP] [ATTENTION] " + msg);
+				print("[BOOTSTRAP] [ATTENTION] " + msg, Color.ORANGE);
 			} else {
-				print("[BOOTSTRAP] [ATTENTION] Type de level non-reconnu ! Msg -> " + msg);
+				print("[BOOTSTRAP] [ATTENTION] Type de level non-reconnu ! Msg -> " + msg, Color.RED);
 			}
 			
 			return;
 		}
 		
 		if (lvl.equals(Level.INFO)) {	
-			print("[INFO] " + msg);
+			print("[INFO] " + msg, Color.WHITE);
 		} else if (lvl.equals(Level.SEVERE)) {
-			print("[ERREUR] " + msg);
+			print("[ERREUR] " + msg, Color.RED);
 		} else if (lvl.equals(Level.WARNING)) {
-			print("[ATTENTION] " + msg);
+			print("[ATTENTION] " + msg, Color.ORANGE);
 		} else {
-			print("[ATTENTION] Type de level non-reconnu ! Msg -> " + msg);
+			print("[ATTENTION] Type de level non-reconnu ! Msg -> " + msg, Color.RED);
+		}
+	}
+	
+	public void logColor(String msg, Level lvl, Color c) {
+		if (GlowAPI.getInstance() == null) {
+			if (lvl.equals(Level.INFO)) {
+				print("[BOOTSTRAP] [INFO] " + msg, c);
+			} else if (lvl.equals(Level.SEVERE)) {
+				print("[BOOTSTRAP] [ERREUR] " + msg, Color.RED);
+			} else if (lvl.equals(Level.WARNING)) {
+				print("[BOOTSTRAP] [ATTENTION] " + msg, Color.ORANGE);
+			} else {
+				print("[BOOTSTRAP] [ATTENTION] Type de level non-reconnu ! Msg -> " + msg, Color.RED);
+			}
+			
+			return;
+		}
+		
+		if (lvl.equals(Level.INFO)) {	
+			print("[INFO] " + msg, c);
+		} else if (lvl.equals(Level.SEVERE)) {
+			print("[ERREUR] " + msg, Color.RED);
+		} else if (lvl.equals(Level.WARNING)) {
+			print("[ATTENTION] " + msg, Color.ORANGE);
+		} else {
+			print("[ATTENTION] Type de level non-reconnu ! Msg -> " + msg, Color.RED);
 		}
 	}
 	
 	public void logBoot(String msg, Level lvl) {
 		if (lvl.equals(Level.INFO)) {
-			print("[BOOTSTRAP] [INFO] " + msg);
+			print("[BOOTSTRAP] [INFO] " + msg, Color.WHITE);
 		} else if (lvl.equals(Level.SEVERE)) {
-			print("[BOOTSTRAP] [ERREUR] " + msg);
+			print("[BOOTSTRAP] [ERREUR] " + msg, Color.RED);
 		} else if (lvl.equals(Level.WARNING)) {
-			print("[BOOTSTRAP] [ATTENTION] " + msg);
+			print("[BOOTSTRAP] [ATTENTION] " + msg, Color.ORANGE);
 		} else {
-			print("[BOOTSTRAP] [ATTENTION] Type de level non-reconnu ! Msg -> " + msg);
+			print("[BOOTSTRAP] [ATTENTION] Type de level non-reconnu ! Msg -> " + msg, Color.RED);
 		}
 	}
   
-	private void print(String msg) {
+	private void print(String msg, Color c) {
 		try {
+			StyleContext context = new StyleContext();
+			
 			if (this.doc.getLength() == 0) {
-				this.doc.insertString(this.doc.getLength(), msg, null);
+				Style style = context.addStyle("style", null);
+				
+				StyleConstants.setForeground(style, c);
+				
+				this.doc.insertString(this.doc.getLength(), msg, style);
 			} else {
-				this.doc.insertString(this.doc.getLength(), "\n" + msg, null);
+				Style style = context.addStyle("style", null);
+				
+				StyleConstants.setForeground(style, c);
+				
+				this.doc.insertString(this.doc.getLength(), "\n" + msg, style);
 			}
 		} catch (BadLocationException e) {
 			log("Erreur critique !", Level.SEVERE);

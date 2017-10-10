@@ -10,7 +10,7 @@ public class Instance extends GlowAPI{
 		getCommand().registerCommand("modules", new Modules());
 		getCommand().registerCommand("clear", new Clear());
 		getCommand().registerCommand("help", new Help());
-		getCommand().registerCommand("helpmodule", new HelpModule(this));
+		getCommand().registerCommand("helpmodule", new HelpModule());
 		getCommand().registerCommand("server", new Server());
 	}
 

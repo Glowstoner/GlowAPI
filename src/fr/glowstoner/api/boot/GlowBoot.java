@@ -91,7 +91,7 @@ public class GlowBoot {
 			console.log("Lancement classes ...", Level.INFO);
 			
 			for (Class<?> clazz : clazzs) {
-				console.log(clazz.getSimpleName(), Level.INFO);
+				console.logBoot("Lancement de la class "+clazz.getName(), Level.INFO);
 				
 				Object o = clazz.newInstance();
 

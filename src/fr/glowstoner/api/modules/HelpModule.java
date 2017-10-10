@@ -6,12 +6,6 @@ import fr.glowstoner.api.console.Level;
 import fr.glowstoner.api.files.GlowModule;
 
 public class HelpModule implements IGlowCommandExecutor {
-	
-	private Instance main;
-
-	public HelpModule(Instance main) {
-		this.main = main;
-	}
 
 	@Override
 	public String description() {
@@ -22,10 +16,10 @@ public class HelpModule implements IGlowCommandExecutor {
 	public void execute(String command, String[] args) {
 		if(args.length == 0) {
 			for(GlowModule mod : GlowModule.getAllModulesInstance()) {
-				GlowAPI.getInstance().getLogger(main).log("Pour le module "+mod.getModuleName()+" : ", Level.INFO);
+				GlowAPI.getInstance().getBaseLogger().log("Pour le module "+mod.getModuleName()+" : ", Level.INFO);
 				
-				GlowAPI.getInstance().getLogger(main).log("Nom : "+mod.getModuleName(), Level.INFO);
-				GlowAPI.getInstance().getLogger(main).log("Version : "+mod.getModuleVersion(), Level.INFO);
+				GlowAPI.getInstance().getBaseLogger().log("Nom : "+mod.getModuleName(), Level.INFO);
+				GlowAPI.getInstance().getBaseLogger().log("Version : "+mod.getModuleVersion(), Level.INFO);
 			}
 		}else {
 			GlowModule sel = null;
@@ -37,15 +31,15 @@ public class HelpModule implements IGlowCommandExecutor {
 			}
 			
 			if(sel == null) {
-				GlowAPI.getInstance().getLogger(main).log("Aucun module trouvé pour \""+args[0]+"\" !", Level.WARNING);
+				GlowAPI.getInstance().getBaseLogger().log("Aucun module trouvé pour \""+args[0]+"\" !", Level.WARNING);
 				
 				return;
 			}
 			
-			GlowAPI.getInstance().getLogger(main).log("Pour le module "+sel.getModuleName()+" : ", Level.INFO);
+			GlowAPI.getInstance().getBaseLogger().log("Pour le module "+sel.getModuleName()+" : ", Level.INFO);
 			
-			GlowAPI.getInstance().getLogger(main).log("Nom : "+sel.getModuleName(), Level.INFO);
-			GlowAPI.getInstance().getLogger(main).log("Version : "+sel.getModuleVersion(), Level.INFO);
+			GlowAPI.getInstance().getBaseLogger().log("Nom : "+sel.getModuleName(), Level.INFO);
+			GlowAPI.getInstance().getBaseLogger().log("Version : "+sel.getModuleVersion(), Level.INFO);
 		}
 	}
 

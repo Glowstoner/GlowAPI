@@ -140,7 +140,7 @@ public class GlowServer implements Runnable {
 						
 						GlowAPI.getInstance().getBaseLogger().log("Protocole PacketLogin détécté : "+p.getPass(), Level.INFO);
 						
-						if(p.getPass().equals("staline")) {
+						if(p.getPass().equals(GlowAPI.getInstance().getConfig().getGlowServerPass())) {
 							GlowAPI.getInstance().getBaseLogger().log("Mot de passe correct !", Level.INFO);
 							
 							GlowServer.logged.add(socket);

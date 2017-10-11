@@ -1,10 +1,12 @@
 package fr.glowstoner.api.boot;
 
+import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.glowstoner.api.GlowAPI;
+import fr.glowstoner.api.config.GlowConfig;
 import fr.glowstoner.api.console.GlowConsole;
 import fr.glowstoner.api.console.Level;
 import fr.glowstoner.api.files.GlowFilesLoader;
@@ -14,9 +16,11 @@ public class GlowBoot {
 	
 	private List<Class<?>> clazzs = new ArrayList<>();
 	private static GlowConsole console;
+	
 	public static boolean status;
 	
-	public GlowFilesLoader filesloader;
+	private GlowFilesLoader filesloader;
+	private GlowConfig config;
 
 	public GlowBoot() {
 		return;
@@ -172,6 +176,14 @@ public class GlowBoot {
 		return this;
 	}
 	
+	public GlowConfig getConfig() {
+		return this.config;
+	}
+	
+	public GlowFilesLoader getFilesLoader() {
+		return this.filesloader;
+	}
+	
 	public void loadFiles(boolean withconsole) {
 		if(withconsole == true) {
 			console.log("Lancement des fichiers ...", Level.INFO);
@@ -191,6 +203,43 @@ public class GlowBoot {
 			
 			console.log("Lancement procédure de chargement des modules !", Level.INFO);
 			filesloader.loadAllModules(this);
+			
+			console.log("Lancement des configs ...", Level.INFO);
+			
+			this.config = new GlowConfig();
+			
+			console.log("Vérification du dossier de configuration ...", Level.INFO);
+			
+			if(!config.hasFolder()) {
+				console.log("Dossier de configuration non-trouvé ! Création ...", Level.WARNING);
+				
+				config.createFolder();
+			}else {
+				console.log("Dossier de configuration trouvé !", Level.INFO);
+			}
+			
+			console.log("Vérification du fichier de configuration ...", Level.INFO);
+			
+			if(!config.hasConfig()) {
+				console.log("Fichier de configuration non-trouvé ! Création ...", Level.WARNING);
+				
+				config.createConfig();
+			}else {
+				console.log("Fichier de configuration trouvé !", Level.INFO);
+				config.setConfig();
+			}
+			
+			console.log("Lancement de la procédure de chargement de la configuration ...", Level.INFO);
+			
+			try {
+				config.loadConfig();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			
+			config.setGlowServerPass();
+			
+			console.log("glowserver-pass = "+config.getGlowServerPass(), Level.INFO);
 		}else {
 			this.filesloader = new GlowFilesLoader(console);
 			
@@ -201,6 +250,26 @@ public class GlowBoot {
 			filesloader.setFolderAuto();
 			
 			filesloader.loadAllModules(this);
+			
+			this.config = new GlowConfig();
+			
+			if(!config.hasFolder()) {
+				config.createFolder();
+			}
+			
+			if(!config.hasConfig()) {
+				config.createConfig();
+			}else {
+				config.setConfig();
+			}
+			
+			try {
+				config.loadConfig();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			
+			config.setGlowServerPass();
 		}
 	}
 	

@@ -131,7 +131,7 @@ public class GlowConsoleServer implements Runnable {
 						
 						PacketLogin p = (PacketLogin) o;
 						
-						if(p.getPass().equals("staline")) {
+						if(p.getPass().equals(GlowAPI.getInstance().getConfig().getGlowServerPass())) {
 							GlowConsoleServer.logged.add(socket);
 							
 							continue;

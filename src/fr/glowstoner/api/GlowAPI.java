@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import fr.glowstoner.api.boot.GlowBoot;
 import fr.glowstoner.api.boot.IGlowAPIMethods;
 import fr.glowstoner.api.command.GlowCommand;
+import fr.glowstoner.api.config.GlowConfig;
 import fr.glowstoner.api.console.GlowConsole;
 import fr.glowstoner.api.console.GlowLogSource;
 import fr.glowstoner.api.console.GlowLogger;
@@ -24,6 +25,7 @@ public abstract class GlowAPI implements IGlowAPIMethods{
 	private static GlowCommand cmd;
 	private static GlowBoot boot;
 	private static GlowServer server;
+	private static GlowConfig config;
 	
 	private static GlowPacket packet;
 
@@ -45,6 +47,10 @@ public abstract class GlowAPI implements IGlowAPIMethods{
 	
 	public GlowServer getServer() {
 		return server;
+	}
+	
+	public GlowConfig getConfig() {
+		return config;
 	}
 	
 	public void setServer(GlowServer server) {
@@ -97,6 +103,8 @@ public abstract class GlowAPI implements IGlowAPIMethods{
 		console = bootload.getConsole();
 		bootload.globalStart(true);
 		
+		config = bootload.getConfig();
+		
 		boot = bootload.getBootLoader();
 		
 		try {
@@ -120,6 +128,8 @@ public abstract class GlowAPI implements IGlowAPIMethods{
 		boot = bootload;
 		
 		bootload.globalStart(false);
+		
+		config = bootload.getConfig();
 		
 		try {
 			GlowAPI.packet.registerAllPackets();

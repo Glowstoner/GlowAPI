@@ -16,7 +16,7 @@ public class Modules implements IGlowCommandExecutor {
 	public void execute(String command, String[] args) {
 		List<String> modules = new ArrayList<>();
 		
-		for(File files : GlowAPI.getInstance().getBootLoader().filesloader.getAllModules()) {
+		for(File files : GlowAPI.getInstance().getBootLoader().getFilesLoader().getAllModules()) {
 			GlowModule mod = new GlowModule(files, GlowAPI.getInstance().getConsole(), GlowAPI.getInstance().getBootLoader());
 			
 			try {

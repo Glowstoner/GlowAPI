@@ -12,6 +12,7 @@ public class Instance extends GlowAPI{
 		getCommand().registerCommand("help", new Help());
 		getCommand().registerCommand("helpmodule", new HelpModule());
 		getCommand().registerCommand("server", new Server());
+		getCommand().registerCommand("bcolor", new BColor(this));
 	}
 
 	@Override

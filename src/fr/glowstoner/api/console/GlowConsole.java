@@ -4,14 +4,14 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -38,9 +38,8 @@ public class GlowConsole {
 	private StyledDocument doc;
 	private GlowLoader loader;
 	
-	private List<String> mem = new ArrayList<>();
-	
-	private int membar;
+	private String n;
+	private String l;
   
 	public void genConsole() {
 		
@@ -65,7 +64,18 @@ public class GlowConsole {
 		
 		this.textpane = new JTextPane();
 		this.textpane.setEditable(false);
-		this.textpane.setFont(new Font("Courrier", 0, 12));
+		
+		Font font = null;
+		
+		try {
+			font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fr/glowstoner/api/ressources/light.ttf")).deriveFont(16f);
+			
+			GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
+		} catch (FontFormatException | IOException e4) {
+			e4.printStackTrace();
+		}
+		
+		this.textpane.setFont(font);
 		this.textpane.setBackground(new Color(50, 50, 50));
 		this.textpane.setForeground(Color.WHITE);
 		this.textpane.setCaretColor(Color.WHITE);
@@ -76,7 +86,7 @@ public class GlowConsole {
 		this.text.setForeground(Color.WHITE);
 		this.text.setCaretColor(Color.WHITE);
 		this.text.setBackground(new Color(50, 50, 50));
-		this.text.setFont(new Font("Courrier", 0, 12));
+		this.text.setFont(new Font("Serge UI", 0, 12));
     
 		this.loader.setLoadText("Chargement scroll ...");
 		
@@ -162,7 +172,7 @@ public class GlowConsole {
 					return;
 				}
 				
-				GlowAPI.getInstance().getConsole().mem.add(line);
+				GlowAPI.getInstance().getConsole().l = line;
 				
 				String[] allargs = line.split(" ");
         
@@ -191,6 +201,8 @@ public class GlowConsole {
 				
 				try {
 					GlowAPI.getInstance().getCommand().executeCommand(command, args);
+					
+					GlowConsole.this.textpane.setCaretPosition(GlowConsole.this.doc.getLength());
 				} catch (Exception e1) {
 					GlowConsole.this.log("Erreur lors de l'execution de la commande \"" + e.getActionCommand() + "\" !", Level.SEVERE);
 					GlowConsole.this.log(e1.toString(), Level.SEVERE);
@@ -203,9 +215,7 @@ public class GlowConsole {
 		this.text.addKeyListener(new KeyListener() {
 			
 			@Override
-			public void keyTyped(KeyEvent e) {
-				
-			}
+			public void keyTyped(KeyEvent e) {}
 			
 			@Override
 			public void keyReleased(KeyEvent e) {}
@@ -216,25 +226,19 @@ public class GlowConsole {
 				
 				switch(e.getKeyCode()) {
 					case KeyEvent.VK_DOWN:
-						//up
-						
-						
-					case KeyEvent.VK_UP:
 						//down
 						
-						if(c.mem.size() <= 1) {
-							if(c.mem.size() == 0) {
-								return;
-							}
-							
-							c.text.setText(c.mem.get(0));
-						}else {
-							c.membar--;
-							
-							System.out.println(c.mem.get(c.mem.size() - 1 + c.membar));
-							
-							c.text.setText(c.mem.get(c.mem.size() - 1 + c.membar));
+						if(text.getText() != null && !text.getText().equals(l)) {
+							n = c.text.getText();
 						}
+						
+						c.text.setText(c.l);
+						break;
+					case KeyEvent.VK_UP:
+						//up
+						
+						c.text.setText(c.n);
+						break;
 				}
 			}
 		});
@@ -343,6 +347,26 @@ public class GlowConsole {
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public JPanel getPanel() {
+		return this.panel;
+	}
+	
+	public JFrame getFrame() {
+		return this.frame;
+	}
+	
+	public JTextPane getPane() {
+		return this.textpane;
+	}
+	
+	public JTextField getText() {
+		return this.text;
+	}
+	
+	public JScrollPane getEndPane() {
+		return this.scroll;
 	}
   
 	public void destroy() {

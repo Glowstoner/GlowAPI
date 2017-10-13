@@ -19,6 +19,7 @@ public class GlowServer implements Runnable {
 
 	private ServerSocket server;
 	private Thread t;
+	private GlowServerFrame f;
 	
 	private static List<Socket> logged = new ArrayList<>();
 	private static List<GlowClientConnection> connections = new ArrayList<>();
@@ -42,6 +43,12 @@ public class GlowServer implements Runnable {
 		}
 		
 		c.start();
+	}
+	
+	public void openWindow() {
+		this.f = new GlowServerFrame("GlowServer");
+		
+		this.f.genWindow();
 	}
 	
 	public void close() {
@@ -72,6 +79,8 @@ public class GlowServer implements Runnable {
 	public void run() {
 		GlowAPI.getInstance().getBaseLogger().log("Serveur actif sur "+server.getLocalPort(), Level.INFO);
 		
+		this.f.log("Serveur actif sur "+server.getLocalPort(), Level.INFO);
+		
 		while(t != null) {
 			try {
 				addConnection(this.server.accept());
@@ -92,7 +101,7 @@ public class GlowServer implements Runnable {
 		public GlowClientThread(Socket socket) {
 			this.socket = socket;
 			
-			GlowAPI.getInstance().getBaseLogger().log("Connection reçue ! IP : "+socket.getInetAddress().getHostAddress(), Level.INFO);
+			GlowServer.this.f.log("Connection reçue ! IP : "+socket.getInetAddress().getHostAddress(), Level.INFO);
 			
 			GlowServer.connections.add(new GlowClientConnection("default", this));
 		}
@@ -126,7 +135,7 @@ public class GlowServer implements Runnable {
 					if(!GlowServer.logged.contains(socket)) {
 						Object o = this.in.readObject();
 						
-						GlowAPI.getInstance().getBaseLogger().log("Packet reçu ! "+o.toString(), Level.INFO);
+						GlowServer.this.f.log("Packet reçu ! "+o.toString(), Level.INFO);
 						
 						if(!(o instanceof PacketLogin)) {
 							break;
@@ -138,16 +147,16 @@ public class GlowServer implements Runnable {
 						
 						PacketLogin p = (PacketLogin) o;
 						
-						GlowAPI.getInstance().getBaseLogger().log("Protocole PacketLogin détécté : "+p.getPass(), Level.INFO);
+						GlowServer.this.f.log("Protocole PacketLogin détécté : "+p.getPass(), Level.INFO);
 						
 						if(p.getPass().equals(GlowAPI.getInstance().getConfig().getGlowServerPass())) {
-							GlowAPI.getInstance().getBaseLogger().log("Mot de passe correct !", Level.INFO);
+							GlowServer.this.f.log("Mot de passe correct !", Level.INFO);
 							
 							GlowServer.logged.add(socket);
 							
 							continue;
 						}else {
-							GlowAPI.getInstance().getBaseLogger().log("Mot de passe incorrect", Level.INFO);
+							GlowServer.this.f.log("Mot de passe incorrect", Level.INFO);
 							
 							PacketMsg msg = new PacketMsg(PacketSource.SERVER);
 							msg.writeMsg("Mot de passe incorrect");
@@ -157,7 +166,7 @@ public class GlowServer implements Runnable {
 					}else {
 						Object o = this.in.readObject();
 						
-						GlowAPI.getInstance().getBaseLogger().log("Packet reçu : "+o, Level.INFO);
+						GlowServer.this.f.log("Packet reçu : "+o, Level.INFO);
 						
 						if(o instanceof GlowPacket) {
 							GlowPacket.getInstance().callEvent((GlowPacket) o);
@@ -166,7 +175,7 @@ public class GlowServer implements Runnable {
 								PacketName n = (PacketName) o;
 
 								if(n.getName() != null) {
-									GlowAPI.getInstance().getBaseLogger().log("PacketName reçu : "+this.socket+" renommé en "+n.getName(), Level.INFO);
+									GlowServer.this.f.log("PacketName reçu : "+this.socket+" renommé en "+n.getName(), Level.INFO);
 									
 									for(GlowClientConnection connection : GlowServer.connections) {
 										if(connection.getClient().equals(this)) {

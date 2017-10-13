@@ -1,5 +1,6 @@
 package fr.glowstoner.api;
 
+import java.awt.Color;
 import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 
@@ -10,6 +11,7 @@ import fr.glowstoner.api.config.GlowConfig;
 import fr.glowstoner.api.console.GlowConsole;
 import fr.glowstoner.api.console.GlowLogSource;
 import fr.glowstoner.api.console.GlowLogger;
+import fr.glowstoner.api.console.Level;
 import fr.glowstoner.api.console.SourceType;
 import fr.glowstoner.api.files.GlowModule;
 import fr.glowstoner.api.server.GlowPacket;
@@ -137,5 +139,48 @@ public abstract class GlowAPI implements IGlowAPIMethods{
 				| InvocationTargetException | MalformedURLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void reload() {
+		getConsole().log("Reload en cours ...", Level.INFO);
+		
+		if(GlowAPI.server != null) {
+			GlowAPI.server.close();
+		}
+		
+		GlowModule.getAllModulesInstance().clear();
+		
+		for(Class<?> clazz : GlowAPI.boot.getAllClasses()) {
+			try {
+				Object o = clazz.newInstance();
+				
+				clazz.getDeclaredMethod("end").invoke(o);
+			} catch (InstantiationException | IllegalAccessException | 
+					IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+				
+				e.printStackTrace();
+			}
+		}
+		
+		GlowAPI.packet = GlowPacket.getInstance();
+		
+		GlowBoot bootload = new GlowBoot();
+		GlowCommand cmdInstance = new GlowCommand();
+		cmd = cmdInstance;
+		
+		bootload.globalStart(true);
+		
+		config = bootload.getConfig();
+		
+		boot = bootload.getBootLoader();
+		
+		try {
+			GlowAPI.packet.registerAllPackets();
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException
+				| InvocationTargetException | MalformedURLException e) {
+			e.printStackTrace();
+		}
+		
+		getConsole().logColor("Reload terminé !", Level.INFO, Color.GREEN);
 	}
 }

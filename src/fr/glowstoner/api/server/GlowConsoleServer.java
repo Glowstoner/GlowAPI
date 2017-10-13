@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.glowstoner.api.GlowAPI;
-import fr.glowstoner.api.console.Level;
 import fr.glowstoner.api.server.packets.PacketLogin;
 import fr.glowstoner.api.server.packets.PacketMsg;
 import fr.glowstoner.api.server.packets.PacketName;
@@ -136,8 +135,6 @@ public class GlowConsoleServer implements Runnable {
 							
 							continue;
 						}else {
-							GlowAPI.getInstance().getBaseLogger().log("Mot de passe incorrect", Level.INFO);
-							
 							PacketMsg msg = new PacketMsg(PacketSource.SERVER);
 							msg.writeMsg("Mot de passe incorrect");
 							

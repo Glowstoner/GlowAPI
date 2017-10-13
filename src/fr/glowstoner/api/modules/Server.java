@@ -16,7 +16,10 @@ public class Server implements IGlowCommandExecutor {
 			try {
 				 GlowAPI.getInstance().setServer(new GlowServer(Integer.valueOf(args[0])));
 				
-				 GlowAPI.getInstance().getServer().start();
+				 GlowServer s = GlowAPI.getInstance().getServer();
+				 
+				 s.openWindow();
+				 s.start();
 			} catch (NumberFormatException | IOException e) {
 				e.printStackTrace();
 			}

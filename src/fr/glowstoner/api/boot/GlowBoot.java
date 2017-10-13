@@ -88,6 +88,10 @@ public class GlowBoot {
 		setClass(module.getModuleClass());
 	}
 	
+	public List<Class<?>> getAllClasses(){
+		return clazzs;
+	}
+	
 	public void startAll(boolean withconsole) throws IllegalAccessException, IllegalArgumentException, InvocationTargetException,
 		NoSuchMethodException, SecurityException, InstantiationException {
 		
@@ -271,9 +275,5 @@ public class GlowBoot {
 			
 			config.setGlowServerPass();
 		}
-	}
-	
-	public void restart() {
-		
 	}
 }

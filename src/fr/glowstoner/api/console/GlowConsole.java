@@ -86,7 +86,7 @@ public class GlowConsole {
 		this.text.setForeground(Color.WHITE);
 		this.text.setCaretColor(Color.WHITE);
 		this.text.setBackground(new Color(50, 50, 50));
-		this.text.setFont(new Font("Serge UI", 0, 12));
+		this.text.setFont(new Font("Arial", 0, 12));
     
 		this.loader.setLoadText("Chargement scroll ...");
 		

@@ -38,6 +38,10 @@ public class GlowConsole {
 	private StyledDocument doc;
 	private GlowLoader loader;
 	
+	private GlowConsoleStyle actualStyle;
+	
+	private Color defaultColor = Color.WHITE;
+	
 	private String n;
 	private String l;
   
@@ -55,7 +59,7 @@ public class GlowConsole {
 		this.loader.packWindow();
 		
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(500);
 		} catch (InterruptedException e4) {
 			e4.printStackTrace();
 		}
@@ -75,8 +79,20 @@ public class GlowConsole {
 			e4.printStackTrace();
 		}
 		
+		this.actualStyle = new GlowConsoleStyle();
+		
+		this.actualStyle.setFont(font);
+		
 		this.textpane.setFont(font);
+		
+		this.actualStyle.setBackgroundColor(new Color(50, 50, 50));
+		
 		this.textpane.setBackground(new Color(50, 50, 50));
+		
+		this.actualStyle.setCaretColor(Color.WHITE);
+		
+		this.actualStyle.setTextColor(Color.WHITE);
+		
 		this.textpane.setForeground(Color.WHITE);
 		this.textpane.setCaretColor(Color.WHITE);
     
@@ -246,11 +262,11 @@ public class GlowConsole {
 		this.loader.setLoadText("Pret !");
 		this.loader.setVisible(false);
 	}
-  
+	
 	public void log(String msg, Level lvl) {
 		if (GlowAPI.getInstance() == null) {
 			if (lvl.equals(Level.INFO)) {
-				print("[BOOTSTRAP] [INFO] " + msg, Color.WHITE);
+				print("[BOOTSTRAP] [INFO] " + msg, this.defaultColor);
 			} else if (lvl.equals(Level.SEVERE)) {
 				print("[BOOTSTRAP] [ERREUR] " + msg, Color.RED);
 			} else if (lvl.equals(Level.WARNING)) {
@@ -263,7 +279,7 @@ public class GlowConsole {
 		}
 		
 		if (lvl.equals(Level.INFO)) {	
-			print("[INFO] " + msg, Color.WHITE);
+			print("[INFO] " + msg, this.defaultColor);
 		} else if (lvl.equals(Level.SEVERE)) {
 			print("[ERREUR] " + msg, Color.RED);
 		} else if (lvl.equals(Level.WARNING)) {
@@ -301,7 +317,7 @@ public class GlowConsole {
 	
 	public void logBoot(String msg, Level lvl) {
 		if (lvl.equals(Level.INFO)) {
-			print("[BOOTSTRAP] [INFO] " + msg, Color.WHITE);
+			print("[BOOTSTRAP] [INFO] " + msg, this.defaultColor);
 		} else if (lvl.equals(Level.SEVERE)) {
 			print("[BOOTSTRAP] [ERREUR] " + msg, Color.RED);
 		} else if (lvl.equals(Level.WARNING)) {
@@ -367,6 +383,37 @@ public class GlowConsole {
 	
 	public JScrollPane getEndPane() {
 		return this.scroll;
+	}
+	
+	public GlowConsoleStyle getActualStyle() {
+		return actualStyle;
+	}
+	
+	public void setStyle(GlowConsoleStyle style, boolean clear) {
+		//font
+		getPane().setFont(style.getFont());
+		getText().setFont(style.getFont());
+		
+		//backgroundColor
+		getPane().setBackground(style.getBackgroundColor());
+		getText().setBackground(style.getBackgroundColor());
+		
+		//textColor
+		getText().setForeground(style.getTextColor());
+		this.defaultColor = style.getTextColor();
+		
+		//caretColor
+		getText().setCaretColor(style.getCaretColor());
+		
+		if(clear) {
+			clear();
+		}
+		
+		this.actualStyle = style;
+	}
+	
+	public void setFont(Font font) {
+		this.textpane.setFont(font);
 	}
   
 	public void destroy() {

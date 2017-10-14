@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -21,6 +19,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
+import fr.glowstoner.api.GlowAPI;
 import fr.glowstoner.api.console.Level;
 
 public class GlowServerFrame extends JFrame {
@@ -57,20 +56,11 @@ public class GlowServerFrame extends JFrame {
 		this.tpane = new JTextPane();
 		this.tpane.setEditable(false);
 		
-		Font font = null;
-		
-		try {
-			font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fr/glowstoner/api/ressources/light.ttf")).deriveFont(16f);
-			
-			GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
-		} catch (FontFormatException | IOException e4) {
-			e4.printStackTrace();
-		}
+		Font font = GlowAPI.getInstance().getConsole().getActualStyle().getFont();
 		
 		this.tpane.setFont(font);
-		this.tpane.setBackground(new Color(50, 50, 50));
-		this.tpane.setForeground(Color.WHITE);
-		this.tpane.setCaretColor(Color.WHITE);
+		this.tpane.setBackground(GlowAPI.getInstance().getConsole().getActualStyle().getBackgroundColor());
+		this.tpane.setForeground(GlowAPI.getInstance().getConsole().getActualStyle().getTextColor());
 		
 		this.scroll = new JScrollPane(this.tpane);
 		
@@ -103,7 +93,7 @@ public class GlowServerFrame extends JFrame {
 	
 	public void log(String msg, Level lvl) {
 		if (lvl.equals(Level.INFO)) {	
-			print("[INFO] " + msg, Color.WHITE);
+			print("[INFO] " + msg, GlowAPI.getInstance().getConsole().getActualStyle().getTextColor());
 		} else if (lvl.equals(Level.SEVERE)) {
 			print("[ERREUR] " + msg, Color.RED);
 		} else if (lvl.equals(Level.WARNING)) {

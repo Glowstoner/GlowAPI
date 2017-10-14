@@ -77,6 +77,10 @@ public abstract class GlowAPI implements IGlowAPIMethods{
 		return instance;
 	}
 	
+	public static void setInstance(GlowAPI instance) {
+		GlowAPI.instance = instance;
+	}
+	
 	public GlowBoot getBootLoader() {
 		return boot;
 	}
@@ -148,8 +152,6 @@ public abstract class GlowAPI implements IGlowAPIMethods{
 			GlowAPI.server.close();
 		}
 		
-		GlowModule.getAllModulesInstance().clear();
-		
 		for(Class<?> clazz : GlowAPI.boot.getAllClasses()) {
 			try {
 				Object o = clazz.newInstance();
@@ -161,6 +163,10 @@ public abstract class GlowAPI implements IGlowAPIMethods{
 				e.printStackTrace();
 			}
 		}
+		
+		GlowModule.getAllModulesInstance().clear();
+		
+		setInstance(null);
 		
 		GlowAPI.packet = GlowPacket.getInstance();
 		

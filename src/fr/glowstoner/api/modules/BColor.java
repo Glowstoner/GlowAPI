@@ -27,6 +27,7 @@ public class BColor implements IGlowCommandExecutor {
 				int b = Integer.valueOf(colorset[2]);
 				
 				main.getConsole().getPane().setBackground(new Color(r, g, b));
+				main.getConsole().getText().setBackground(new Color(r, g, b));
 				
 				main.getBaseLogger().log("La couleur du background a été fixée sur "+r+", "+g+" et "+b, Level.INFO);
 			}catch(Exception e) {

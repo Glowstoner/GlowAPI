@@ -1,10 +1,10 @@
-package fr.glowstoner.api.server.packets;
+package fr.glowstoner.api.network.packets;
 
 import java.io.Serializable;
 
-import fr.glowstoner.api.server.GlowPacket;
-import fr.glowstoner.api.server.PacketSource;
-import fr.glowstoner.api.server.PacketType;
+import fr.glowstoner.api.network.packets.control.GlowPacket;
+import fr.glowstoner.api.network.packets.control.enums.PacketSource;
+import fr.glowstoner.api.network.packets.control.enums.PacketType;
 
 public class PacketName extends GlowPacket implements Serializable{
 

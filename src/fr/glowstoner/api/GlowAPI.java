@@ -9,15 +9,15 @@ import fr.glowstoner.api.boot.IGlowAPIMethods;
 import fr.glowstoner.api.command.GlowCommand;
 import fr.glowstoner.api.config.GlowConfig;
 import fr.glowstoner.api.console.GlowConsole;
-import fr.glowstoner.api.console.GlowLogSource;
-import fr.glowstoner.api.console.GlowLogger;
-import fr.glowstoner.api.console.Level;
-import fr.glowstoner.api.console.SourceType;
+import fr.glowstoner.api.console.logger.GlowLogSource;
+import fr.glowstoner.api.console.logger.GlowLogger;
+import fr.glowstoner.api.console.logger.Level;
+import fr.glowstoner.api.console.logger.SourceType;
 import fr.glowstoner.api.files.GlowModule;
-import fr.glowstoner.api.server.GlowPacket;
-import fr.glowstoner.api.server.GlowServer;
-import fr.glowstoner.api.server.PacketSource;
-import fr.glowstoner.api.server.packets.PacketMsg;
+import fr.glowstoner.api.network.packets.PacketMsg;
+import fr.glowstoner.api.network.packets.control.GlowPacket;
+import fr.glowstoner.api.network.packets.control.enums.PacketSource;
+import fr.glowstoner.api.network.server.GlowServer;
 
 public abstract class GlowAPI implements IGlowAPIMethods{
 	

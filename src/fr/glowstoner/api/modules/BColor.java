@@ -3,7 +3,7 @@ package fr.glowstoner.api.modules;
 import java.awt.Color;
 
 import fr.glowstoner.api.command.IGlowCommandExecutor;
-import fr.glowstoner.api.console.Level;
+import fr.glowstoner.api.console.logger.Level;
 
 public class BColor implements IGlowCommandExecutor {
 	

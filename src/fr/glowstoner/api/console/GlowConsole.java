@@ -17,6 +17,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.UIManager;
@@ -28,27 +29,29 @@ import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
 import fr.glowstoner.api.GlowAPI;
+import fr.glowstoner.api.console.logger.Level;
 
 public class GlowConsole {
-	private JPanel panel;
+	private JPanel panel, gpanel;
 	private JFrame frame;
 	private JTextField text;
 	private JTextPane textpane;
 	private JScrollPane scroll;
 	private StyledDocument doc;
 	private GlowLoader loader;
+	private JTabbedPane tab;
 	
 	private GlowConsoleStyle actualStyle;
+	private GlowWelcome welcome;
 	
 	private Color defaultColor = Color.WHITE;
 	
-	private String n;
-	private String l;
+	private String n, l;
   
 	public void genConsole() {
 		
 		try{
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		}catch (ClassNotFoundException|InstantiationException|IllegalAccessException|UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
 		}
@@ -59,7 +62,7 @@ public class GlowConsole {
 		this.loader.packWindow();
 		
 		try {
-			Thread.sleep(500);
+			Thread.sleep(1000);
 		} catch (InterruptedException e4) {
 			e4.printStackTrace();
 		}
@@ -115,7 +118,9 @@ public class GlowConsole {
 		
 		this.frame = new JFrame();
 		this.frame.setTitle("GlowAPI");
-		this.frame.setSize(1200, 800);
+		this.frame.setSize(1250, 800);
+		this.frame.setUndecorated(false);
+		this.frame.setLocationRelativeTo(null);
 		
 		try {
 			this.frame.setIconImage(ImageIO.read(getClass().getResource("/fr/glowstoner/api/ressources/glowstone.png")));
@@ -123,9 +128,12 @@ public class GlowConsole {
 			e3.printStackTrace();
 		}
 		
+		this.gpanel = new JPanel();
+		this.gpanel.setSize(new Dimension(1200, 800));
+		
 		this.panel = new JPanel(new BorderLayout());
 		
-		this.panel.setPreferredSize(new Dimension(1200, 800));
+		this.panel.setPreferredSize(new Dimension(1200, 700));
 		
 		this.panel.add(this.text, BorderLayout.PAGE_END);
 		this.panel.add(this.scroll, BorderLayout.CENTER);
@@ -135,8 +143,21 @@ public class GlowConsole {
 		this.frame.setVisible(true);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.frame.setLocationRelativeTo(null);
-		this.frame.setResizable(true);
-		this.frame.add(this.panel);
+		this.frame.setResizable(false);
+		
+		this.tab = new JTabbedPane();
+		
+		this.welcome = new GlowWelcome();
+		
+		tab.addTab("Bonjour !", new GlowWelcome().get());
+		tab.addTab("GlowConsole", this.panel);
+		
+		this.gpanel.add(this.tab);
+		this.gpanel.add(this.welcome.get());
+		
+		this.gpanel.setBackground(new Color(60, 60, 60));
+		
+		this.frame.add(gpanel);
 		
 		this.loader.setLoadText("Chargement doc ...");
 		
@@ -261,6 +282,8 @@ public class GlowConsole {
 		
 		this.loader.setLoadText("Pret !");
 		this.loader.setVisible(false);
+		
+		this.frame.pack();
 	}
 	
 	public void log(String msg, Level lvl) {
@@ -387,6 +410,14 @@ public class GlowConsole {
 	
 	public GlowConsoleStyle getActualStyle() {
 		return actualStyle;
+	}
+	
+	public JPanel getGlobalPanel() {
+		return gpanel;
+	}
+	
+	public GlowWelcome getWelcome() {
+		return welcome;
 	}
 	
 	public void setStyle(GlowConsoleStyle style, boolean clear) {

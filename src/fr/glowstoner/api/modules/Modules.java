@@ -7,7 +7,7 @@ import java.util.List;
 
 import fr.glowstoner.api.GlowAPI;
 import fr.glowstoner.api.command.IGlowCommandExecutor;
-import fr.glowstoner.api.console.Level;
+import fr.glowstoner.api.console.logger.Level;
 import fr.glowstoner.api.files.GlowModule;
 
 public class Modules implements IGlowCommandExecutor {

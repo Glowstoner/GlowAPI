@@ -3,6 +3,8 @@ package fr.glowstoner.api.console;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -19,13 +21,13 @@ public class GlowLoader extends JFrame{
 	private static final long serialVersionUID = -5215161524990337111L;
 
 	private JPanel panel;
-	private JLabel text;
+	private JLabel load, text;
 	
 	public GlowLoader() {
 		super.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		super.setTitle("GlowAPI Loader");
-		super.setPreferredSize(new Dimension(1200, 800));
+		super.setPreferredSize(new Dimension(600, 400));
 		super.setUndecorated(true);
 		
 		try {
@@ -39,7 +41,7 @@ public class GlowLoader extends JFrame{
 		this.panel = new JPanel();
 		this.panel.setLayout(null);
 		
-		this.panel.setPreferredSize(new Dimension(1200, 800));
+		this.panel.setPreferredSize(new Dimension(600, 400));
 	}
 	
 	public void setLoadPanel() {
@@ -52,19 +54,37 @@ public class GlowLoader extends JFrame{
 		
 		gif.setImageObserver(label);
 		label.setLayout(null);
-		label.setBounds(560, 100, 111, 47);
+		label.setBounds(250, 100, 111, 47);
 		
 		this.panel.add(label);
 		
-		text = new JLabel("Chargement ...");
+		load = new JLabel("Chargement ...");
+		
+		Font font = null;
+		
+		try {
+			font = Font.createFont(Font.TRUETYPE_FONT, getClass().getResourceAsStream("/fr/glowstoner/api/ressources/light.ttf")).deriveFont(30f);
+			
+			GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
+		} catch (FontFormatException | IOException e4) {
+			e4.printStackTrace();
+		}
+		
+		load.setFont(font);
+		
+		load.setForeground(Color.WHITE);
+		
+		load.setLayout(null);
+		load.setBounds(230, 10, 500, 500);
+		
+		this.text = new JLabel("GlowAPI by Glowstoner, Version Alpha");
+		text.setFont(font.deriveFont(15f));
 		text.setForeground(Color.WHITE);
-		
-		text.setFont(new Font("Sergoe UI Light", Font.PLAIN, 30));
-		
 		text.setLayout(null);
-		text.setBounds(530, 10, 500, 500);
+		text.setBounds(190, 50, 500, 500);
 		
 		this.panel.add(text);
+		this.panel.add(load);
 		
 		super.getContentPane().add(panel);
 	}

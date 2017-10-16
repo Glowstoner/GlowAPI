@@ -1,4 +1,4 @@
-package fr.glowstoner.api.server;
+package fr.glowstoner.api.network.packets.control;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.glowstoner.api.files.GlowModule;
+import fr.glowstoner.api.network.packets.control.enums.PacketSource;
+import fr.glowstoner.api.network.packets.control.enums.PacketType;
 
 public abstract class GlowPacket implements Serializable{
 

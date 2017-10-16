@@ -1,4 +1,4 @@
-package fr.glowstoner.api.server;
+package fr.glowstoner.api.network.client;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -6,19 +6,15 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import fr.glowstoner.api.GlowAPI;
-import fr.glowstoner.api.console.Level;
+import fr.glowstoner.api.network.packets.control.GlowPacket;
 
-public class GlowClient {
+public class GlowConsoleClient {
 	private Socket socket;
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
 
-	public GlowClient(String ip, int port) throws IOException{
-		GlowAPI.getInstance().getBaseLogger().log("Connection en cours à "+ip+" via "+port+" ...", Level.INFO);
-		
+	public GlowConsoleClient(String ip, int port) throws IOException{
 		socket = new Socket(ip, port);
-		GlowAPI.getInstance().getBaseLogger().log("Vous êtes connecté ! -> "+socket, Level.INFO);
 		start();
 	}
 	

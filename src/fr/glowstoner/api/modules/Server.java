@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import fr.glowstoner.api.GlowAPI;
 import fr.glowstoner.api.command.IGlowCommandExecutor;
-import fr.glowstoner.api.console.Level;
-import fr.glowstoner.api.server.GlowServer;
+import fr.glowstoner.api.console.logger.Level;
+import fr.glowstoner.api.network.server.GlowServer;
 
 public class Server implements IGlowCommandExecutor {
 

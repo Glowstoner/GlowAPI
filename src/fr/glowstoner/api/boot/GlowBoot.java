@@ -8,7 +8,7 @@ import java.util.List;
 import fr.glowstoner.api.GlowAPI;
 import fr.glowstoner.api.config.GlowConfig;
 import fr.glowstoner.api.console.GlowConsole;
-import fr.glowstoner.api.console.Level;
+import fr.glowstoner.api.console.logger.Level;
 import fr.glowstoner.api.files.GlowFilesLoader;
 import fr.glowstoner.api.files.GlowModule;
 

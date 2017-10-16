@@ -1,4 +1,4 @@
-package fr.glowstoner.api.server;
+package fr.glowstoner.api.network.packets.control;
 
 public interface IGlowPacketListener {
 	

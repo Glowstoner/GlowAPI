@@ -1,4 +1,4 @@
-package fr.glowstoner.api.server;
+package fr.glowstoner.api.network.server;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -10,10 +10,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import fr.glowstoner.api.GlowAPI;
-import fr.glowstoner.api.console.Level;
-import fr.glowstoner.api.server.packets.PacketLogin;
-import fr.glowstoner.api.server.packets.PacketMsg;
-import fr.glowstoner.api.server.packets.PacketName;
+import fr.glowstoner.api.console.logger.Level;
+import fr.glowstoner.api.network.packets.PacketLogin;
+import fr.glowstoner.api.network.packets.PacketMsg;
+import fr.glowstoner.api.network.packets.PacketName;
+import fr.glowstoner.api.network.packets.control.GlowPacket;
+import fr.glowstoner.api.network.packets.control.enums.PacketSource;
 
 public class GlowServer implements Runnable {
 

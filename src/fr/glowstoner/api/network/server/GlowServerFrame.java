@@ -1,4 +1,4 @@
-package fr.glowstoner.api.server;
+package fr.glowstoner.api.network.server;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -20,7 +20,7 @@ import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
 import fr.glowstoner.api.GlowAPI;
-import fr.glowstoner.api.console.Level;
+import fr.glowstoner.api.console.logger.Level;
 
 public class GlowServerFrame extends JFrame {
 

@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 
 import fr.glowstoner.api.boot.GlowBoot;
 import fr.glowstoner.api.console.GlowConsole;
-import fr.glowstoner.api.console.Level;
+import fr.glowstoner.api.console.logger.Level;
 
 public class GlowFilesLoader {
 	

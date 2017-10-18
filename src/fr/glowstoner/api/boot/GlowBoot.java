@@ -1,6 +1,9 @@
 package fr.glowstoner.api.boot;
 
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +12,9 @@ import fr.glowstoner.api.GlowAPI;
 import fr.glowstoner.api.config.GlowConfig;
 import fr.glowstoner.api.console.GlowConsole;
 import fr.glowstoner.api.console.logger.Level;
-import fr.glowstoner.api.files.GlowFilesLoader;
-import fr.glowstoner.api.files.GlowModule;
+import fr.glowstoner.api.logger.GlowFileLogger;
+import fr.glowstoner.api.module.GlowModule;
+import fr.glowstoner.api.module.GlowModulesLoader;
 
 public class GlowBoot {
 	
@@ -19,7 +23,7 @@ public class GlowBoot {
 	
 	public static boolean status;
 	
-	private GlowFilesLoader filesloader;
+	private GlowModulesLoader filesloader;
 	private GlowConfig config;
 
 	public GlowBoot() {
@@ -136,11 +140,9 @@ public class GlowBoot {
 	
 	public void globalStart(boolean withconsole) {
 		if(withconsole == true) {
-			console.log("Lancement Global ...", Level.INFO);
-			
 			loadFiles(true);
 			
-			setClass("fr.glowstoner.api.modules.Instance", true);
+			setClass("fr.glowstoner.api.basemodules.Instance", true);
 			
 			try {
 				startAll(true);
@@ -184,15 +186,47 @@ public class GlowBoot {
 		return this.config;
 	}
 	
-	public GlowFilesLoader getFilesLoader() {
+	public GlowModulesLoader getFilesLoader() {
 		return this.filesloader;
 	}
 	
 	public void loadFiles(boolean withconsole) {
 		if(withconsole == true) {
+			GlowFileLogger log = new GlowFileLogger();
+			
+			if(!log.hasFolder()) {	
+				log.createFolder();
+			}
+			
+			try {
+				log.createLogFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			try {
+				System.setOut(new PrintStream(new FileOutputStream(log.getLogFile())));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			
+			console.log("Lancement global ...", Level.INFO);
+			
+			console.log("Lancement des logs ...", Level.INFO);
+			
+			if(!log.hasFolder()) {
+				console.log("Dossier des logs non-trouvé ! Création ...", Level.WARNING);
+			}else {
+				console.log("Dossier des logs trouvé !", Level.INFO);
+			}
+			
+			console.log("Procédure de création des logs ...", Level.INFO);
+			
+			console.log("Fichier de log mis à " + log.getLogFile().getPath() + " !", Level.INFO);
+			
 			console.log("Lancement des fichiers ...", Level.INFO);
 			
-			this.filesloader = new GlowFilesLoader(console);
+			this.filesloader = new GlowModulesLoader(console);
 			
 			if(!filesloader.hasFolder()) {
 				console.log("Impossible de trouver le dossier \"modules\" ! Création ...", Level.WARNING);
@@ -245,7 +279,25 @@ public class GlowBoot {
 			
 			console.log("glowserver-pass = "+config.getGlowServerPass(), Level.INFO);
 		}else {
-			this.filesloader = new GlowFilesLoader(console);
+			GlowFileLogger log = new GlowFileLogger();
+			
+			if(!log.hasFolder()) {
+				log.createFolder();
+			}
+			
+			try {
+				log.createLogFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			try {
+				System.setOut(new PrintStream(new FileOutputStream(log.getLogFile())));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+			
+			this.filesloader = new GlowModulesLoader(console);
 			
 			if(!filesloader.hasFolder()) {
 				filesloader.createFolder();

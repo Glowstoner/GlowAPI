@@ -1,6 +1,6 @@
 package fr.glowstoner.api.console.logger;
 
-import fr.glowstoner.api.files.GlowModule;
+import fr.glowstoner.api.module.GlowModule;
 
 public class GlowLogSource {
 	

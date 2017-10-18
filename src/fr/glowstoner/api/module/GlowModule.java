@@ -1,4 +1,4 @@
-package fr.glowstoner.api.files;
+package fr.glowstoner.api.module;
 
 import java.io.File;
 import java.io.IOException;

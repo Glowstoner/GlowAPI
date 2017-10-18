@@ -13,7 +13,7 @@ import fr.glowstoner.api.console.logger.GlowLogSource;
 import fr.glowstoner.api.console.logger.GlowLogger;
 import fr.glowstoner.api.console.logger.Level;
 import fr.glowstoner.api.console.logger.SourceType;
-import fr.glowstoner.api.files.GlowModule;
+import fr.glowstoner.api.module.GlowModule;
 import fr.glowstoner.api.network.packets.PacketMsg;
 import fr.glowstoner.api.network.packets.control.GlowPacket;
 import fr.glowstoner.api.network.packets.control.enums.PacketSource;

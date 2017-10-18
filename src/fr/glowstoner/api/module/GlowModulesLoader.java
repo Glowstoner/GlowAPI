@@ -1,4 +1,4 @@
-package fr.glowstoner.api.files;
+package fr.glowstoner.api.module;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,12 +10,12 @@ import fr.glowstoner.api.boot.GlowBoot;
 import fr.glowstoner.api.console.GlowConsole;
 import fr.glowstoner.api.console.logger.Level;
 
-public class GlowFilesLoader {
+public class GlowModulesLoader {
 	
 	private File folder;
 	private GlowConsole console;
 
-	public GlowFilesLoader(GlowConsole console) {
+	public GlowModulesLoader(GlowConsole console) {
 		this.console = console;
 	}
 	

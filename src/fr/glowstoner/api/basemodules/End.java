@@ -1,4 +1,4 @@
-package fr.glowstoner.api.modules;
+package fr.glowstoner.api.basemodules;
 
 import fr.glowstoner.api.command.IGlowCommandExecutor;
 

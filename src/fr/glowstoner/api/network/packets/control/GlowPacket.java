@@ -9,7 +9,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.glowstoner.api.files.GlowModule;
+import fr.glowstoner.api.module.GlowModule;
 import fr.glowstoner.api.network.packets.control.enums.PacketSource;
 import fr.glowstoner.api.network.packets.control.enums.PacketType;
 

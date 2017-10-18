@@ -366,6 +366,8 @@ public class GlowConsole {
 				StyleConstants.setForeground(style, c);
 				
 				this.doc.insertString(this.doc.getLength(), "\n" + msg, style);
+				
+				System.out.println(msg);
 			}
 		} catch (BadLocationException e) {
 			log("Erreur critique !", Level.SEVERE);

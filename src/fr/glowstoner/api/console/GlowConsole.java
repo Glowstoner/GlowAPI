@@ -11,7 +11,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +36,7 @@ import javax.swing.text.StyledDocument;
 import fr.glowstoner.api.GlowAPI;
 import fr.glowstoner.api.console.enums.EventResult;
 import fr.glowstoner.api.console.logger.enums.Level;
+import fr.glowstoner.api.logger.GlowFileLogger;
 
 public class GlowConsole {
 	private JPanel panel, gpanel;
@@ -46,13 +50,16 @@ public class GlowConsole {
 	
 	private GlowConsoleStyle actualStyle;
 	private GlowWelcome welcome;
+	private GlowFileLogger log;
 	
 	private Color defaultColor = Color.WHITE;
 	
 	private String n, l;
 	
 	private List<IGlowConsoleListener> listeners = new ArrayList<>();
-  
+	
+	private PrintStream logstream;
+	
 	public void genConsole() {
 		
 		try{
@@ -384,11 +391,13 @@ public class GlowConsole {
 				StyleConstants.setForeground(style, c);
 				
 				this.doc.insertString(this.doc.getLength(), "\n" + msg, style);
-				
-				System.out.println(msg);
 			}
+			
+			logstream.println(msg);
+				
+			System.out.println(msg);
 		} catch (BadLocationException e) {
-			log("Erreur critique !", Level.SEVERE);
+			e.printStackTrace();
 		}
 		
 		this.textpane.setStyledDocument(this.doc);
@@ -468,6 +477,8 @@ public class GlowConsole {
 	}
   
 	public void destroy() {
+		this.logstream.close();
+		
 		this.frame.dispatchEvent(new WindowEvent(this.frame, 201));
 	}
 	
@@ -481,5 +492,21 @@ public class GlowConsole {
 		}
 		
 		return EventResult.DO_NOTHING;
+	}
+
+	public GlowFileLogger getLog() {
+		return log;
+	}
+
+	public void setLog(GlowFileLogger log) {
+		this.log = log;
+	}
+	
+	public void initLogStream() {
+		try {
+			this.logstream = new PrintStream(new FileOutputStream(this.log.getLogFile()));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 }

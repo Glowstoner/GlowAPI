@@ -126,7 +126,9 @@ public class GlowServer implements Runnable {
 		}
 		
 		public void sendPacket(GlowPacket p) throws IOException {
-			this.out.writeObject(p);
+			GlowPacket gp = GlowAPI.getInstance().getPacket().callEventSending(p);
+			
+			this.out.writeObject(gp);
 			this.out.flush();
 		}
 		
@@ -144,8 +146,6 @@ public class GlowServer implements Runnable {
 				try {
 					if(!GlowServer.logged.contains(socket)) {
 						Object o = this.in.readObject();
-						
-						GlowServer.this.f.log("Packet reçu ! "+o.toString(), Level.INFO);
 						
 						if(!(o instanceof PacketLogin)) {
 							break;

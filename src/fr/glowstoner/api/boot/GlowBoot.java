@@ -25,6 +25,7 @@ public class GlowBoot {
 	
 	private GlowModulesLoader filesloader;
 	private GlowConfig config;
+	private GlowFileLogger log;
 	
 	private boolean withConsole;
 
@@ -120,7 +121,6 @@ public class GlowBoot {
 				Object o = clazz.newInstance();
 
 				clazz.getDeclaredMethod("start").invoke(o);
-				
 			}
 		}
 	}
@@ -197,15 +197,21 @@ public class GlowBoot {
 		return this.filesloader;
 	}
 	
+	public GlowFileLogger getLog() {
+		return this.log;
+	}
+	
 	public boolean withConsole() {
 		return this.withConsole;
 	}
 	
 	public void loadFiles(boolean withconsole) {
 		if(withconsole == true) {
-			GlowFileLogger log = new GlowFileLogger();
+			this.log = new GlowFileLogger();
 			
-			if(!log.hasFolder()) {	
+			boolean haslogFolder = log.hasFolder();
+			
+			if(!haslogFolder) {
 				log.createFolder();
 			}
 			
@@ -215,17 +221,14 @@ public class GlowBoot {
 				e.printStackTrace();
 			}
 			
-			try {
-				System.setOut(new PrintStream(new FileOutputStream(log.getLogFile())));
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
+			GlowBoot.console.setLog(this.log);
+			GlowBoot.console.initLogStream();
 			
 			console.log("Lancement global ...", Level.INFO);
 			
 			console.log("Lancement des logs ...", Level.INFO);
 			
-			if(!log.hasFolder()) {
+			if(!haslogFolder) {
 				console.log("Dossier des logs non-trouvé ! Création ...", Level.WARNING);
 			}else {
 				console.log("Dossier des logs trouvé !", Level.INFO);

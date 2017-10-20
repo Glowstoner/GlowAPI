@@ -41,70 +41,6 @@ public class GlowConsoleClient {
 		out.writeObject(GlowAPI.getInstance().getPacket().callEventSending(packet));
 		out.flush();
 	}
-	
-	public void crypt() {
-		   GlowAPI.getInstance().getPacket().addPacketListener(new IGlowPacketListener() {
-			
-			@Override
-			public GlowPacket onPacketSending(GlowPacket packet) {
-				if(packet instanceof PacketLogin) {
-					PacketLogin login = (PacketLogin) packet;
-					
-					String pass = login.getPass();
-					
-					GlowNetworkSecurity s = new GlowNetworkSecurity();
-					try {
-						s.setKey(key);
-						login.writePass(s.encrypt(pass));
-					} catch (UnsupportedEncodingException | NoSuchAlgorithmException |
-							InvalidKeyException | NoSuchPaddingException | IllegalBlockSizeException |
-							BadPaddingException e) {
-						
-						e.printStackTrace();
-					}
-					
-					return login; 
-				}else if(packet instanceof PacketText) {
-					PacketText text = (PacketText) packet;
-					
-					String msg = text.getText();
-					
-					GlowNetworkSecurity s = new GlowNetworkSecurity();
-					
-					try {
-						s.setKey(key);
-						text.writeText(s.encrypt(msg));
-					} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException
-							| IllegalBlockSizeException | BadPaddingException | UnsupportedEncodingException e) {
-						e.printStackTrace();
-					}
-					
-					return text;
-				}else if(packet instanceof PacketName) {
-					PacketName name = (PacketName) packet;
-					
-					String sname = name.getName();
-					
-					GlowNetworkSecurity s = new GlowNetworkSecurity();
-					
-					try {
-						s.setKey(key);
-						name.writeName(s.encrypt(sname));
-					} catch (UnsupportedEncodingException | NoSuchAlgorithmException | InvalidKeyException |
-							NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e) {
-						e.printStackTrace();
-					}
-					
-					return name;
-				}
-				
-				return packet;
-			}
-			
-			@Override
-			public void onPacketReceive(GlowPacket packet) {}
-		   });
-	}
 
    public void start() throws IOException {  
       out = new ObjectOutputStream(socket.getOutputStream());
@@ -114,6 +50,70 @@ public class GlowConsoleClient {
       re.start();
       
       crypt();
+   }
+   
+   public void crypt() {
+	   GlowAPI.getInstance().getPacket().addPacketListener(new IGlowPacketListener() {
+		
+		@Override
+		public GlowPacket onPacketSending(GlowPacket packet) {
+			if(packet instanceof PacketLogin) {
+				PacketLogin login = (PacketLogin) packet;
+				
+				String pass = login.getPass();
+				
+				GlowNetworkSecurity s = new GlowNetworkSecurity();
+				try {
+					s.setKey(key);
+					login.writePass(s.encrypt(pass));
+				} catch (UnsupportedEncodingException | NoSuchAlgorithmException |
+						InvalidKeyException | NoSuchPaddingException | IllegalBlockSizeException |
+						BadPaddingException e) {
+					
+					e.printStackTrace();
+				}
+				
+				return login; 
+			}else if(packet instanceof PacketText) {
+				PacketText text = (PacketText) packet;
+				
+				String msg = text.getText();
+				
+				GlowNetworkSecurity s = new GlowNetworkSecurity();
+				
+				try {
+					s.setKey(key);
+					text.writeText(s.encrypt(msg));
+				} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException
+						| IllegalBlockSizeException | BadPaddingException | UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+				
+				return text;
+			}else if(packet instanceof PacketName) {
+				PacketName name = (PacketName) packet;
+				
+				String sname = name.getName();
+				
+				GlowNetworkSecurity s = new GlowNetworkSecurity();
+				
+				try {
+					s.setKey(key);
+					name.writeName(s.encrypt(sname));
+				} catch (UnsupportedEncodingException | NoSuchAlgorithmException | InvalidKeyException |
+						NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e) {
+					e.printStackTrace();
+				}
+				
+				return name;
+			}
+			
+			return packet;
+		}
+		
+		@Override
+		public void onPacketReceive(GlowPacket packet) {}
+	});
    }
    
    public void stop() throws IOException {

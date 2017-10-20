@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -52,7 +53,7 @@ public class GlowConsole {
 	private GlowWelcome welcome;
 	private GlowFileLogger log;
 	
-	private Color defaultColor = Color.WHITE;
+	private Color defaultColor = Color.WHITE, wexitcolor;
 	
 	private String n, l;
 	
@@ -153,7 +154,7 @@ public class GlowConsole {
 		this.panel.setBackground(new Color(50, 50, 50));
 		
 		this.frame.setVisible(true);
-		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.frame.setLocationRelativeTo(null);
 		this.frame.setResizable(false);
 		
@@ -305,6 +306,35 @@ public class GlowConsole {
 			}
 		});
 		
+		this.frame.addWindowListener(new WindowListener() {
+			
+			@Override
+			public void windowOpened(WindowEvent e) {}
+			
+			@Override
+			public void windowIconified(WindowEvent e) {}
+			
+			@Override
+			public void windowDeiconified(WindowEvent e) {}
+			
+			@Override
+			public void windowDeactivated(WindowEvent e) {}
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				GlowExitPopup gep = new GlowExitPopup();
+				gep.showPopup();
+			}
+			
+			@Override
+			public void windowClosed(WindowEvent e) {
+				
+			}
+			
+			@Override
+			public void windowActivated(WindowEvent e) {}
+		});
+		
 		this.loader.setLoadText("Pret !");
 		this.loader.setVisible(false);
 		
@@ -449,6 +479,14 @@ public class GlowConsole {
 		return welcome;
 	}
 	
+	public void setWExitColor(Color c) {
+		this.wexitcolor = c;
+	}
+	
+	public Color getWExitColor() {
+		return this.wexitcolor;
+	}
+	
 	public void setStyle(GlowConsoleStyle style, boolean clear) {
 		//font
 		getPane().setFont(style.getFont());
@@ -465,6 +503,9 @@ public class GlowConsole {
 		//caretColor
 		getText().setCaretColor(style.getCaretColor());
 		
+		//wexit
+		setWExitColor(style.getBackgroundColor());
+		
 		if(clear) {
 			clear();
 		}
@@ -479,7 +520,7 @@ public class GlowConsole {
 	public void destroy() {
 		this.logstream.close();
 		
-		this.frame.dispatchEvent(new WindowEvent(this.frame, 201));
+		System.exit(0);
 	}
 	
 	public void addConsoleListener(IGlowConsoleListener listener) {

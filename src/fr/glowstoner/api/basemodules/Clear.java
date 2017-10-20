@@ -2,7 +2,7 @@ package fr.glowstoner.api.basemodules;
 
 import fr.glowstoner.api.GlowAPI;
 import fr.glowstoner.api.command.IGlowCommandExecutor;
-import fr.glowstoner.api.console.logger.Level;
+import fr.glowstoner.api.console.logger.enums.Level;
 
 public class Clear implements IGlowCommandExecutor {
 

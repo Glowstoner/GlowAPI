@@ -3,7 +3,7 @@ package fr.glowstoner.api.basemodules;
 import java.awt.Color;
 
 import fr.glowstoner.api.command.IGlowCommandExecutor;
-import fr.glowstoner.api.console.logger.Level;
+import fr.glowstoner.api.console.logger.enums.Level;
 
 public class BColor implements IGlowCommandExecutor {
 	
@@ -30,8 +30,6 @@ public class BColor implements IGlowCommandExecutor {
 				main.getConsole().getText().setBackground(new Color(r, g, b));
 				
 				main.getBaseLogger().log("La couleur du background a été fixée sur "+r+", "+g+" et "+b, Level.INFO);
-				
-				System.out.println("set");
 			}catch(Exception e) {
 				main.getBaseLogger().log("Une erreur lors du chargement de la couleur pour " + args[0] + " !", Level.SEVERE);
 			}
@@ -42,7 +40,7 @@ public class BColor implements IGlowCommandExecutor {
 
 	@Override
 	public String description() {
-		return "Change la coleur du background de la console";
+		return "Change la couleur du background de la console";
 	}
 
 }

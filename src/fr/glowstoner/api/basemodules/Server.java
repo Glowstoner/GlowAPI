@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import fr.glowstoner.api.GlowAPI;
 import fr.glowstoner.api.command.IGlowCommandExecutor;
-import fr.glowstoner.api.console.logger.Level;
+import fr.glowstoner.api.console.logger.enums.Level;
 import fr.glowstoner.api.network.server.GlowServer;
 
 public class Server implements IGlowCommandExecutor {

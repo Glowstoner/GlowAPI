@@ -1,3 +1,4 @@
 #GlowAPI by Glowstoner
 
-glowserver-pass: default
+glowserver-pass: DEFAULT
+glowserver-key: DEFAULT

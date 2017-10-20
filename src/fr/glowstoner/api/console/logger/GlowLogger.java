@@ -1,6 +1,7 @@
 package fr.glowstoner.api.console.logger;
 
 import fr.glowstoner.api.GlowAPI;
+import fr.glowstoner.api.console.logger.enums.Level;
 
 public class GlowLogger {
 	

@@ -4,24 +4,73 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.Socket;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
+import fr.glowstoner.api.GlowAPI;
+import fr.glowstoner.api.network.packets.PacketLogin;
 import fr.glowstoner.api.network.packets.control.GlowPacket;
+import fr.glowstoner.api.network.packets.control.IGlowPacketListener;
+import fr.glowstoner.api.network.security.GlowNetworkSecurity;
 
 public class GlowConsoleClient {
 	private Socket socket;
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
+	
+	private String key = "U2FsdGVkX1/MmvdUcO15WYc6OWHQqWkF6K9edkfBRW4=";
 
 	public GlowConsoleClient(String ip, int port) throws IOException{
 		socket = new Socket(ip, port);
 		start();
 	}
 	
+	public void setSecurityKey(String key) {
+		this.key = key;
+	}
+	
 	public void sendPacket(GlowPacket packet) throws IOException {
-		out.writeObject(packet);
+		out.writeObject(GlowAPI.getInstance().getPacket().callEventSending(packet));
 		out.flush();
 	}
+	
+	public void crypt() {
+		   GlowAPI.getInstance().getPacket().addPacketListener(new IGlowPacketListener() {
+			
+			@Override
+			public GlowPacket onPacketSending(GlowPacket packet) {
+				if(packet instanceof PacketLogin) {
+					PacketLogin login = (PacketLogin) packet;
+					
+					String pass = login.getPass();
+					
+					GlowNetworkSecurity s = new GlowNetworkSecurity();
+					try {
+						s.setKey(key);
+						login.setPass(s.encrypt(pass));
+					} catch (UnsupportedEncodingException | NoSuchAlgorithmException |
+							InvalidKeyException | NoSuchPaddingException | IllegalBlockSizeException |
+							BadPaddingException e) {
+						
+						e.printStackTrace();
+					}
+					
+					return login; 
+				}
+				
+				return packet;
+			}
+			
+			@Override
+			public void onPacketReceive(GlowPacket packet) {}
+		});
+	   }
 
    public void start() throws IOException {  
       out = new ObjectOutputStream(socket.getOutputStream());
@@ -29,6 +78,8 @@ public class GlowConsoleClient {
       
       GlowClientReceiver re = new GlowClientReceiver(this.in);
       re.start();
+      
+      crypt();
    }
    
    public void stop() throws IOException {

@@ -6,13 +6,13 @@ import fr.glowstoner.api.network.packets.control.GlowPacket;
 import fr.glowstoner.api.network.packets.control.enums.PacketSource;
 import fr.glowstoner.api.network.packets.control.enums.PacketType;
 
-public class PacketMsg extends GlowPacket implements Serializable{
+public class PacketText extends GlowPacket implements Serializable{
 	
 	private static final long serialVersionUID = -7679587219427702316L;
 	
 	private String msg;
 	
-	public PacketMsg(PacketSource source) {
+	public PacketText(PacketSource source) {
 		super(source);
 	}
 	

@@ -1,5 +1,6 @@
 package fr.glowstoner.api.console.logger;
 
+import fr.glowstoner.api.console.logger.enums.SourceType;
 import fr.glowstoner.api.module.GlowModule;
 
 public class GlowLogSource {

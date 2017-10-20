@@ -11,10 +11,10 @@ import fr.glowstoner.api.config.GlowConfig;
 import fr.glowstoner.api.console.GlowConsole;
 import fr.glowstoner.api.console.logger.GlowLogSource;
 import fr.glowstoner.api.console.logger.GlowLogger;
-import fr.glowstoner.api.console.logger.Level;
-import fr.glowstoner.api.console.logger.SourceType;
+import fr.glowstoner.api.console.logger.enums.Level;
+import fr.glowstoner.api.console.logger.enums.SourceType;
 import fr.glowstoner.api.module.GlowModule;
-import fr.glowstoner.api.network.packets.PacketMsg;
+import fr.glowstoner.api.network.packets.PacketText;
 import fr.glowstoner.api.network.packets.control.GlowPacket;
 import fr.glowstoner.api.network.packets.control.enums.PacketSource;
 import fr.glowstoner.api.network.server.GlowServer;
@@ -96,7 +96,7 @@ public abstract class GlowAPI implements IGlowAPIMethods{
 	
 	//load all (Packets + Console + Command + Default Bootloader)
 	public static void boot() {
-		PacketMsg p = new PacketMsg(PacketSource.DEFAULT);
+		PacketText p = new PacketText(PacketSource.DEFAULT);
 		p.writeMsg("default-boot");
 		
 		GlowAPI.packet = GlowPacket.getInstance();
@@ -123,7 +123,7 @@ public abstract class GlowAPI implements IGlowAPIMethods{
 	
 	//load Command + Packets
 	public static void bootInstance() {
-		PacketMsg p = new PacketMsg(PacketSource.DEFAULT);
+		PacketText p = new PacketText(PacketSource.DEFAULT);
 		p.writeMsg("default-genI");
 		
 		GlowAPI.packet = GlowPacket.getInstance();

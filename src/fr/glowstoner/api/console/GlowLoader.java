@@ -77,7 +77,7 @@ public class GlowLoader extends JFrame{
 		load.setLayout(null);
 		load.setBounds(230, 10, 500, 500);
 		
-		this.text = new JLabel("GlowAPI by Glowstoner, Version Alpha");
+		this.text = new JLabel("GlowAPI by Glowstoner, Version Beta");
 		text.setFont(font.deriveFont(15f));
 		text.setForeground(Color.WHITE);
 		text.setLayout(null);

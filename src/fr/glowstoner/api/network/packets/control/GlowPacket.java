@@ -38,6 +38,14 @@ public abstract class GlowPacket implements Serializable{
 		}
 	}
 	
+	public GlowPacket callEventSending(GlowPacket packet) {
+		for(IGlowPacketListener listener : listeners) {
+			return listener.onPacketSending(packet);
+		}
+		
+		return packet;
+	}
+	
 	public void registerAllPackets() throws NoSuchMethodException, SecurityException,
 	IllegalAccessException, IllegalArgumentException, InvocationTargetException, MalformedURLException {
 		

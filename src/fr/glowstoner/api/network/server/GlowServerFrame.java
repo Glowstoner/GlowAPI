@@ -20,7 +20,7 @@ import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
 import fr.glowstoner.api.GlowAPI;
-import fr.glowstoner.api.console.logger.Level;
+import fr.glowstoner.api.console.logger.enums.Level;
 
 public class GlowServerFrame extends JFrame {
 

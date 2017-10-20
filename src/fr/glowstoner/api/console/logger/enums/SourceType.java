@@ -1,4 +1,4 @@
-package fr.glowstoner.api.console.logger;
+package fr.glowstoner.api.console.logger.enums;
 
 public enum SourceType {
 	

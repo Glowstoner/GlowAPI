@@ -10,24 +10,32 @@ import java.util.Iterator;
 import java.util.List;
 
 import fr.glowstoner.api.GlowAPI;
-import fr.glowstoner.api.console.logger.Level;
+import fr.glowstoner.api.console.logger.enums.Level;
 import fr.glowstoner.api.network.packets.PacketLogin;
-import fr.glowstoner.api.network.packets.PacketMsg;
+import fr.glowstoner.api.network.packets.PacketText;
 import fr.glowstoner.api.network.packets.PacketName;
 import fr.glowstoner.api.network.packets.control.GlowPacket;
 import fr.glowstoner.api.network.packets.control.enums.PacketSource;
+import fr.glowstoner.api.network.security.GlowNetworkSecurity;
 
 public class GlowServer implements Runnable {
 
 	private ServerSocket server;
 	private Thread t;
 	private GlowServerFrame f;
+	private String key = "U2FsdGVkX1/MmvdUcO15WYc6OWHQqWkF6K9edkfBRW4=";
 	
 	private static List<Socket> logged = new ArrayList<>();
 	private static List<GlowClientConnection> connections = new ArrayList<>();
 	
 	public GlowServer(int port) throws IOException {
 		this.server = new ServerSocket(port);
+		
+		setKey(GlowAPI.getInstance().getConfig().getGlowServerSecrurityKey());
+	}
+	
+	public void setKey(String key) {
+		this.key  = key;
 	}
 	
 	public void start() {
@@ -151,16 +159,23 @@ public class GlowServer implements Runnable {
 						
 						GlowServer.this.f.log("Protocole PacketLogin détécté : "+p.getPass(), Level.INFO);
 						
-						if(p.getPass().equals(GlowAPI.getInstance().getConfig().getGlowServerPass())) {
+						GlowNetworkSecurity sec = new GlowNetworkSecurity();
+						sec.setKey(key);
+						
+						String pass = sec.decrypt(p.getPass());
+						
+						GlowServer.this.f.log("Contenu décrypté : "+pass, Level.INFO);
+						
+						if(pass.equals(GlowAPI.getInstance().getConfig().getGlowServerPass())) {
 							GlowServer.this.f.log("Mot de passe correct !", Level.INFO);
 							
 							GlowServer.logged.add(socket);
 							
 							continue;
 						}else {
-							GlowServer.this.f.log("Mot de passe incorrect", Level.INFO);
+							GlowServer.this.f.log("Mot de passe incorrect", Level.WARNING);
 							
-							PacketMsg msg = new PacketMsg(PacketSource.SERVER);
+							PacketText msg = new PacketText(PacketSource.SERVER);
 							msg.writeMsg("Mot de passe incorrect");
 							
 							sendPacket(msg);

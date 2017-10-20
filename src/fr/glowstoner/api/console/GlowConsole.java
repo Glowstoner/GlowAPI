@@ -12,6 +12,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -29,7 +31,8 @@ import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
 
 import fr.glowstoner.api.GlowAPI;
-import fr.glowstoner.api.console.logger.Level;
+import fr.glowstoner.api.console.enums.EventResult;
+import fr.glowstoner.api.console.logger.enums.Level;
 
 public class GlowConsole {
 	private JPanel panel, gpanel;
@@ -47,6 +50,8 @@ public class GlowConsole {
 	private Color defaultColor = Color.WHITE;
 	
 	private String n, l;
+	
+	private List<IGlowConsoleListener> listeners = new ArrayList<>();
   
 	public void genConsole() {
 		
@@ -211,6 +216,22 @@ public class GlowConsole {
 				
 				GlowAPI.getInstance().getConsole().l = line;
 				
+				GlowConsole.this.log("[CONSOLE] Console -> \"" +line + "\"", Level.INFO);
+				
+				EventResult r = null;
+				
+				try {
+					r = callConsoleSendEvent(line);
+					
+					if(r.equals(EventResult.OVERRIDE_COMMAND)) {
+						GlowConsole.this.textpane.setCaretPosition(GlowConsole.this.doc.getLength());
+						
+						return;
+					}
+				}catch (Exception ex) {
+					ex.printStackTrace();
+				}
+				
 				String[] allargs = line.split(" ");
         
 				StringBuilder builder = new StringBuilder();
@@ -228,10 +249,10 @@ public class GlowConsole {
 				}
         
 				String command = allargs[0];
-				
-				GlowConsole.this.log("[CONSOLE] Console -> \"" +line + "\"", Level.INFO);
 				if (!GlowAPI.getInstance().getCommand().hasCommand(command)) {
-					GlowConsole.this.log("[CONSOLE] Commande inexistante !", Level.WARNING);
+					if(!r.equals(EventResult.SUPPRESS_WARNING)) {
+						GlowConsole.this.log("[CONSOLE] Commande inexistante !", Level.WARNING);
+					}
           
 					return;
 				}
@@ -242,9 +263,6 @@ public class GlowConsole {
 					GlowConsole.this.textpane.setCaretPosition(GlowConsole.this.doc.getLength());
 				} catch (Exception e1) {
 					GlowConsole.this.log("Erreur lors de l'execution de la commande \"" + e.getActionCommand() + "\" !", Level.SEVERE);
-					GlowConsole.this.log(e1.toString(), Level.SEVERE);
-					
-					e1.printStackTrace();
 				}
 			}
 		});
@@ -451,5 +469,17 @@ public class GlowConsole {
   
 	public void destroy() {
 		this.frame.dispatchEvent(new WindowEvent(this.frame, 201));
+	}
+	
+	public void addConsoleListener(IGlowConsoleListener listener) {
+		listeners.add(listener);
+	}
+	
+	public EventResult callConsoleSendEvent(String rawcommand) {
+		for(IGlowConsoleListener l : listeners) {
+			return l.onCommandSending(rawcommand);
+		}
+		
+		return EventResult.DO_NOTHING;
 	}
 }

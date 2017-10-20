@@ -21,6 +21,7 @@ public class GlowConfig {
 	private File config;
 	private Map<String, Object> configMap;
 	private String glowserverpass;
+	private String glowserverkey;
 	
 	public GlowConfig() {
 		
@@ -107,9 +108,18 @@ public class GlowConfig {
 
 	public void setGlowServerPass() {
 		this.glowserverpass = (String) this.configMap.get("glowserver-pass");
+		this.glowserverkey = (String) this.configMap.get("glowserver-key");
+		
+		if(this.glowserverkey.equals("DEFAULT")) {
+			this.glowserverkey = "U2FsdGVkX1/YKFedEcb6B9kgqrhr/zfHkf/uOF+CGNM=";
+		}
 	}
 	
 	public String getGlowServerPass() {
 		return this.glowserverpass;
+	}
+	
+	public String getGlowServerSecrurityKey() {
+		return this.glowserverkey;
 	}
 }

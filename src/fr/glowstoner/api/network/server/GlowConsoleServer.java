@@ -10,21 +10,26 @@ import java.util.List;
 
 import fr.glowstoner.api.GlowAPI;
 import fr.glowstoner.api.network.packets.PacketLogin;
-import fr.glowstoner.api.network.packets.PacketMsg;
+import fr.glowstoner.api.network.packets.PacketText;
 import fr.glowstoner.api.network.packets.PacketName;
 import fr.glowstoner.api.network.packets.control.GlowPacket;
 import fr.glowstoner.api.network.packets.control.enums.PacketSource;
+import fr.glowstoner.api.network.security.GlowNetworkSecurity;
 
 public class GlowConsoleServer implements Runnable {
 
 	private ServerSocket server;
 	private Thread t;
 	
+	private String key = "U2FsdGVkX1/MmvdUcO15WYc6OWHQqWkF6K9edkfBRW4=";
+	
 	private static List<Socket> logged = new ArrayList<>();
 	private static List<GlowClientConnection> connections = new ArrayList<>();
 	
 	public GlowConsoleServer(int port) throws IOException {
 		this.server = new ServerSocket(port);
+		
+		setKey(GlowAPI.getInstance().getConfig().getGlowServerSecrurityKey());
 	}
 	
 	public void start() {
@@ -42,6 +47,10 @@ public class GlowConsoleServer implements Runnable {
 		}
 		
 		c.start();
+	}
+	
+	public void setKey(String key) {
+		this.key = key;
 	}
 	
 	public void close() {
@@ -132,12 +141,17 @@ public class GlowConsoleServer implements Runnable {
 						
 						PacketLogin p = (PacketLogin) o;
 						
-						if(p.getPass().equals(GlowAPI.getInstance().getConfig().getGlowServerPass())) {
+						GlowNetworkSecurity sec = new GlowNetworkSecurity();
+						sec.setKey(key);
+						
+						String pass = sec.decrypt(p.getPass());
+						
+						if(pass.equals(GlowAPI.getInstance().getConfig().getGlowServerPass())) {
 							GlowConsoleServer.logged.add(socket);
 							
 							continue;
 						}else {
-							PacketMsg msg = new PacketMsg(PacketSource.SERVER);
+							PacketText msg = new PacketText(PacketSource.SERVER);
 							msg.writeMsg("Mot de passe incorrect");
 							
 							sendPacket(msg);

@@ -11,7 +11,7 @@ import java.util.List;
 import fr.glowstoner.api.GlowAPI;
 import fr.glowstoner.api.config.GlowConfig;
 import fr.glowstoner.api.console.GlowConsole;
-import fr.glowstoner.api.console.logger.Level;
+import fr.glowstoner.api.console.logger.enums.Level;
 import fr.glowstoner.api.logger.GlowFileLogger;
 import fr.glowstoner.api.module.GlowModule;
 import fr.glowstoner.api.module.GlowModulesLoader;
@@ -25,6 +25,8 @@ public class GlowBoot {
 	
 	private GlowModulesLoader filesloader;
 	private GlowConfig config;
+	
+	private boolean withConsole;
 
 	public GlowBoot() {
 		return;
@@ -109,6 +111,8 @@ public class GlowBoot {
 
 				clazz.getDeclaredMethod("start").invoke(o);
 			}
+			
+			GlowAPI.getInstance().getConsole().addConsoleListener(new fr.glowstoner.api.basemodules.ConsoleTextHandler());
 
 			console.logBoot("Démarré !", Level.INFO);
 		}else {
@@ -116,6 +120,7 @@ public class GlowBoot {
 				Object o = clazz.newInstance();
 
 				clazz.getDeclaredMethod("start").invoke(o);
+				
 			}
 		}
 	}
@@ -139,6 +144,8 @@ public class GlowBoot {
 	}
 	
 	public void globalStart(boolean withconsole) {
+		this.withConsole = withconsole;
+		
 		if(withconsole == true) {
 			loadFiles(true);
 			
@@ -148,7 +155,7 @@ public class GlowBoot {
 				startAll(true);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException
 					| SecurityException | InstantiationException e) {
-				console.log("Erreur critique lors du lancement des files :'(", Level.SEVERE);
+				console.log("Erreur critique lors du lancement de l'API :'(", Level.SEVERE);
 				e.printStackTrace();
 			}
 			
@@ -156,7 +163,7 @@ public class GlowBoot {
 		}else {
 			loadFiles(false);
 			
-			setClass("fr.glowstoner.api.modules.Instance", false);
+			setClass("fr.glowstoner.api.basemodules.Instance", false);
 			
 			try {
 				startAll(false);
@@ -188,6 +195,10 @@ public class GlowBoot {
 	
 	public GlowModulesLoader getFilesLoader() {
 		return this.filesloader;
+	}
+	
+	public boolean withConsole() {
+		return this.withConsole;
 	}
 	
 	public void loadFiles(boolean withconsole) {

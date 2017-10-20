@@ -21,12 +21,17 @@ public class PacketLogin extends GlowPacket implements Serializable{
 		return pass;
 	}
 
-	public void setPass(String pass) {
+	public void writePass(String pass) {
 		this.pass = pass;
 	}
 
 	@Override
 	public PacketType state() {
 		return PacketType.CLIENT;
+	}
+
+	@Override
+	public boolean isEncrypted() {
+		return true;
 	}
 }

@@ -97,7 +97,7 @@ public abstract class GlowAPI implements IGlowAPIMethods{
 	//load all (Packets + Console + Command + Default Bootloader)
 	public static void boot() {
 		PacketText p = new PacketText(PacketSource.DEFAULT);
-		p.writeMsg("default-boot");
+		p.writeText("default-boot");
 		
 		GlowAPI.packet = GlowPacket.getInstance();
 		
@@ -124,7 +124,7 @@ public abstract class GlowAPI implements IGlowAPIMethods{
 	//load Command + Packets
 	public static void bootInstance() {
 		PacketText p = new PacketText(PacketSource.DEFAULT);
-		p.writeMsg("default-genI");
+		p.writeText("default-genI");
 		
 		GlowAPI.packet = GlowPacket.getInstance();
 		

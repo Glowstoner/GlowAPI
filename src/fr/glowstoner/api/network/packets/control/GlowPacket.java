@@ -57,6 +57,8 @@ public abstract class GlowPacket implements Serializable{
 	}
 
 	public abstract PacketType state();
+	
+	public abstract boolean isEncrypted();
 
 	public static GlowPacket getInstance() {
 		return instance;

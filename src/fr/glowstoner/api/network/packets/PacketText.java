@@ -10,22 +10,27 @@ public class PacketText extends GlowPacket implements Serializable{
 	
 	private static final long serialVersionUID = -7679587219427702316L;
 	
-	private String msg;
+	private String text;
 	
 	public PacketText(PacketSource source) {
 		super(source);
 	}
 	
-	public void writeMsg(String msg) {
-		this.msg = msg;
+	public void writeText(String msg) {
+		this.text = msg;
 	}
 
-	public String getMsg() {
-		return msg;
+	public String getText() {
+		return text;
 	}
 
 	@Override
 	public PacketType state() {
 		return PacketType.DOUBLE;
+	}
+
+	@Override
+	public boolean isEncrypted() {
+		return true;
 	}
 }

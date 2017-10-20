@@ -1,9 +1,7 @@
 package fr.glowstoner.api.boot;
 
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
@@ -302,12 +300,6 @@ public class GlowBoot {
 			try {
 				log.createLogFile();
 			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			
-			try {
-				System.setOut(new PrintStream(new FileOutputStream(log.getLogFile())));
-			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
 			

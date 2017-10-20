@@ -82,8 +82,8 @@ public class GlowConsoleServer implements Runnable {
 		while(t != null) {
 			try {
 				addConnection(this.server.accept());
-			} catch (IOException e) {
-				e.printStackTrace();
+			} catch (Exception e) {
+				break;
 			}
 		}
 	}
@@ -112,9 +112,11 @@ public class GlowConsoleServer implements Runnable {
 		}
 		
 		public void sendPacket(GlowPacket p) throws IOException {
-			this.out.writeObject(p);
+			this.out.writeObject(GlowAPI.getInstance().getPacket().callEventSending(p));
 			this.out.flush();
 		}
+		
+		
 		
 		public void close() throws IOException {
 			this.active = false;
@@ -152,7 +154,7 @@ public class GlowConsoleServer implements Runnable {
 							continue;
 						}else {
 							PacketText msg = new PacketText(PacketSource.SERVER);
-							msg.writeMsg("Mot de passe incorrect");
+							msg.writeText("Mot de passe incorrect");
 							
 							sendPacket(msg);
 						}
@@ -163,12 +165,15 @@ public class GlowConsoleServer implements Runnable {
 							GlowPacket.getInstance().callEvent((GlowPacket) o);
 							
 							if(o instanceof PacketName) {
+								GlowNetworkSecurity s = new GlowNetworkSecurity();
+								s.setKey(key);
+								
 								PacketName n = (PacketName) o;
 
 								if(n.getName() != null) {
 									for(GlowClientConnection connection : GlowConsoleServer.connections) {
 										if(connection.getClient().equals(this)) {
-											connection.setName(n.getName());
+											connection.setName(s.decrypt(n.getName()));
 										}
 									}
 								}

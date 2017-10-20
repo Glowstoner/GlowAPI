@@ -15,6 +15,8 @@ import javax.crypto.NoSuchPaddingException;
 
 import fr.glowstoner.api.GlowAPI;
 import fr.glowstoner.api.network.packets.PacketLogin;
+import fr.glowstoner.api.network.packets.PacketName;
+import fr.glowstoner.api.network.packets.PacketText;
 import fr.glowstoner.api.network.packets.control.GlowPacket;
 import fr.glowstoner.api.network.packets.control.IGlowPacketListener;
 import fr.glowstoner.api.network.security.GlowNetworkSecurity;
@@ -53,7 +55,7 @@ public class GlowConsoleClient {
 					GlowNetworkSecurity s = new GlowNetworkSecurity();
 					try {
 						s.setKey(key);
-						login.setPass(s.encrypt(pass));
+						login.writePass(s.encrypt(pass));
 					} catch (UnsupportedEncodingException | NoSuchAlgorithmException |
 							InvalidKeyException | NoSuchPaddingException | IllegalBlockSizeException |
 							BadPaddingException e) {
@@ -62,6 +64,38 @@ public class GlowConsoleClient {
 					}
 					
 					return login; 
+				}else if(packet instanceof PacketText) {
+					PacketText text = (PacketText) packet;
+					
+					String msg = text.getText();
+					
+					GlowNetworkSecurity s = new GlowNetworkSecurity();
+					
+					try {
+						s.setKey(key);
+						text.writeText(s.encrypt(msg));
+					} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException
+							| IllegalBlockSizeException | BadPaddingException | UnsupportedEncodingException e) {
+						e.printStackTrace();
+					}
+					
+					return text;
+				}else if(packet instanceof PacketName) {
+					PacketName name = (PacketName) packet;
+					
+					String sname = name.getName();
+					
+					GlowNetworkSecurity s = new GlowNetworkSecurity();
+					
+					try {
+						s.setKey(key);
+						name.writeName(s.encrypt(sname));
+					} catch (UnsupportedEncodingException | NoSuchAlgorithmException | InvalidKeyException |
+							NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e) {
+						e.printStackTrace();
+					}
+					
+					return name;
 				}
 				
 				return packet;
@@ -69,8 +103,8 @@ public class GlowConsoleClient {
 			
 			@Override
 			public void onPacketReceive(GlowPacket packet) {}
-		});
-	   }
+		   });
+	}
 
    public void start() throws IOException {  
       out = new ObjectOutputStream(socket.getOutputStream());

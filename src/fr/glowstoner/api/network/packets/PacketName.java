@@ -20,12 +20,17 @@ public class PacketName extends GlowPacket implements Serializable{
 		return name;
 	}
 
-	public void setName(String name) {
+	public void writeName(String name) {
 		this.name = name;
 	}
 
 	@Override
 	public PacketType state() {
 		return PacketType.SERVER;
+	}
+
+	@Override
+	public boolean isEncrypted() {
+		return true;
 	}
 }

@@ -3,11 +3,18 @@ package fr.glowstoner.api.network.server;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 import fr.glowstoner.api.GlowAPI;
 import fr.glowstoner.api.console.logger.enums.Level;
@@ -15,6 +22,7 @@ import fr.glowstoner.api.network.packets.PacketLogin;
 import fr.glowstoner.api.network.packets.PacketText;
 import fr.glowstoner.api.network.packets.PacketName;
 import fr.glowstoner.api.network.packets.control.GlowPacket;
+import fr.glowstoner.api.network.packets.control.IGlowPacketListener;
 import fr.glowstoner.api.network.packets.control.enums.PacketSource;
 import fr.glowstoner.api.network.security.GlowNetworkSecurity;
 
@@ -123,6 +131,8 @@ public class GlowServer implements Runnable {
 			this.out.flush();
 			
 			this.active = true;
+			
+			crypt();
 		}
 		
 		public void sendPacket(GlowPacket p) throws IOException {
@@ -131,6 +141,70 @@ public class GlowServer implements Runnable {
 			this.out.writeObject(gp);
 			this.out.flush();
 		}
+		
+		public void crypt() {
+			   GlowAPI.getInstance().getPacket().addPacketListener(new IGlowPacketListener() {
+				
+				@Override
+				public GlowPacket onPacketSending(GlowPacket packet) {
+					if(packet instanceof PacketLogin) {
+						PacketLogin login = (PacketLogin) packet;
+						
+						String pass = login.getPass();
+						
+						GlowNetworkSecurity s = new GlowNetworkSecurity();
+						try {
+							s.setKey(key);
+							login.writePass(s.encrypt(pass));
+						} catch (UnsupportedEncodingException | NoSuchAlgorithmException |
+								InvalidKeyException | NoSuchPaddingException | IllegalBlockSizeException |
+								BadPaddingException e) {
+							
+							e.printStackTrace();
+						}
+						
+						return login; 
+					}else if(packet instanceof PacketText) {
+						PacketText text = (PacketText) packet;
+						
+						String msg = text.getText();
+						
+						GlowNetworkSecurity s = new GlowNetworkSecurity();
+						
+						try {
+							s.setKey(key);
+							text.writeText(s.encrypt(msg));
+						} catch (InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException
+								| IllegalBlockSizeException | BadPaddingException | UnsupportedEncodingException e) {
+							e.printStackTrace();
+						}
+						
+						return text;
+					}else if(packet instanceof PacketName) {
+						PacketName name = (PacketName) packet;
+						
+						String sname = name.getName();
+						
+						GlowNetworkSecurity s = new GlowNetworkSecurity();
+						
+						try {
+							s.setKey(key);
+							name.writeName(s.encrypt(sname));
+						} catch (UnsupportedEncodingException | NoSuchAlgorithmException | InvalidKeyException |
+								NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e) {
+							e.printStackTrace();
+						}
+						
+						return name;
+					}
+					
+					return packet;
+				}
+				
+				@Override
+				public void onPacketReceive(GlowPacket packet) {}
+			});
+		   }
 		
 		public void close() throws IOException {
 			this.active = false;
@@ -176,7 +250,7 @@ public class GlowServer implements Runnable {
 							GlowServer.this.f.log("Mot de passe incorrect", Level.WARNING);
 							
 							PacketText msg = new PacketText(PacketSource.SERVER);
-							msg.writeMsg("Mot de passe incorrect");
+							msg.writeText("Mot de passe incorrect");
 							
 							sendPacket(msg);
 						}
@@ -188,8 +262,10 @@ public class GlowServer implements Runnable {
 						if(o instanceof GlowPacket) {
 							GlowPacket.getInstance().callEvent((GlowPacket) o);
 							
+							GlowPacket gp = (GlowPacket) o;
+							
 							if(o instanceof PacketName) {
-								PacketName n = (PacketName) o;
+								PacketName n = (PacketName) gp;
 
 								if(n.getName() != null) {
 									GlowServer.this.f.log("PacketName reçu : "+this.socket+" renommé en "+n.getName(), Level.INFO);

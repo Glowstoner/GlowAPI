@@ -15,7 +15,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class GlowNetworkSecurity {
 	
-	//Dédicasse à Nomalab
+	//Dédicace à Nomalab
 	
 	private SecretKeySpec key;
 	private byte[] bkey;
